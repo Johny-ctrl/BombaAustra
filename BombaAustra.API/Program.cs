@@ -1,3 +1,5 @@
+//se configura el servicio y el comportamiento de la api
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
