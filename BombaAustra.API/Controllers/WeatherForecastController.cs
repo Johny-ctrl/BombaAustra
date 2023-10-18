@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using MySql.Data.MySqlClient;
 
 namespace BombaAustra.API.Controllers
 {
@@ -6,6 +7,7 @@ namespace BombaAustra.API.Controllers
     [Route("[controller]")]
     public class WeatherForecastController : ControllerBase
     {
+
         private static readonly string[] Summaries = new[]
         {
         "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
@@ -29,5 +31,8 @@ namespace BombaAustra.API.Controllers
             })
             .ToArray();
         }
+
     }
+
+
 }
