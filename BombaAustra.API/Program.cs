@@ -12,7 +12,7 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-//agregamos conexion BD
+//agregamos conexion BD(Inyeccion BBDD)
 builder.Services.AddDbContext<DataContext>(x => x.UseSqlServer("name=ConexionSQL"));
 
 var app = builder.Build();
@@ -29,5 +29,13 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.MapControllers();
+
+//Con estas instrucciones habilito el uso de las peticiones, aqui se puede empezar a configurar seguridad
+app.UseCors(x => x
+    .AllowAnyMethod()
+    .AllowAnyHeader()
+    .SetIsOriginAllowed(origin => true)
+    .AllowCredentials());
+
 
 app.Run();
