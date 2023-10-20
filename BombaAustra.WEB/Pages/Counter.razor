@@ -1,20 +1,48 @@
 ﻿@page "/counter"
-
-<!--cCodigo HTML-->
-<PageTitle>Counter</PageTitle>
+@using BombaAustra.Shared.Entities;
+@inject IRepository repository
 
 <h1>Counter</h1>
 
-<p role="status">Current count: @currentCount</p>
+@if(USUARIOS is null)
+{
+    <p>Cargando</p>
+}
+else
+{
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th></th>
+                <th>Usuarios</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var usuario in USUARIOS!)
+            {
+                <tr>
+                    <td>
+                        <a class="btn btn-warning">Editar</a>
+                        <button class="btn btn-danger">Borrar</button>
+                    </td>
+                    <td>
+                        @usuario.NOMBRE
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
 
-<button class="btn btn-primary" @onclick="IncrementCount">Click me</button>
+}
 
 <!--codigo C#-->
 @code {
-    private int currentCount = 0;
+    //Se llama a la clase usuarios, el "?" indica que pueden ser nulos
+    public List<Usuario>? USUARIOS { get; set; }
 
-    private void IncrementCount()
+    protected override async Task OnInitializedAsync()
     {
-        currentCount++;
+        var responseHttp = await repository.Get<List<Usuario>>("api/bomberos");//Devuelve la lista de usuario
+        USUARIOS = responseHttp.Response;
     }
 }

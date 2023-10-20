@@ -1,4 +1,4 @@
-﻿using System;
+﻿
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -11,14 +11,13 @@ namespace BombaAustra.Shared.Entities
     public class Equipo
     {
         [Key]
-        public int ID_EQUIPO;
+        public int ID_EQUIPO {  get; set; }
 
-        
-        public int TIPO_EQUIPO;
+        public int TIPO_EQUIPO { get; set; }
 
-        public string NOMBRE_EQUIPO = null!;
+        public string NOMBRE_EQUIPO { get; set; } = null!;
 
-        public int ESTADO_EQUIPO;
+        public int ESTADO_EQUIPO { get; set; }
 
     }
 }

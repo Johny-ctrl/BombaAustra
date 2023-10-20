@@ -5,7 +5,7 @@
 namespace BombaAustra.API.Migrations
 {
     /// <inheritdoc />
-    public partial class innerBD : Migration
+    public partial class BomberoBD : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)

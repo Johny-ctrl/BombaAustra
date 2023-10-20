@@ -10,8 +10,8 @@ namespace BombaAustra.Shared.Entities
     public class Compañia
     {
         [Key]
-        public int ID_COMPAÑIA;
+        public int ID_COMPAÑIA {  get; set; }
 
-        public int ID_NOMBRE;
+        public int ID_NOMBRE_COMPANIA {  get; set; }
     }
 }

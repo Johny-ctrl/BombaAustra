@@ -10,8 +10,8 @@ namespace BombaAustra.Shared.Entities
     public class TipoEquipo
     {
         [Key]
-        public int ID_TIPO_EQUIPO;
+        public int ID_TIPO_EQUIPO {  get; set; }
 
-        public string DESCRIPCION = null!;
+        public string DESCRIPCION { get; set; } = null!;
     }
 }

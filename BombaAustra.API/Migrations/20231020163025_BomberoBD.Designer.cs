@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BombaAustra.API.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20231019211051_innerBD")]
-    partial class innerBD
+    [Migration("20231020163025_BomberoBD")]
+    partial class BomberoBD
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

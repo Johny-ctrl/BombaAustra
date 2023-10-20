@@ -10,9 +10,9 @@ namespace BombaAustra.Shared.Entities
     public class TipoUsuario
     {
         [Key]
-        public int ID_TIPO_USUARIO;
+        public int ID_TIPO_USUARIO {  get; set; }
 
-        public string DESCRIPCION = null!;
+        public string DESCRIPCION { get; set; } = null!;
 
     }
 }

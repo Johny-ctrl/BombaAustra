@@ -10,9 +10,9 @@ namespace BombaAustra.Shared.Entities
     public class Reporte
     {
         [Key]
-        public int ID_REPORTE;
+        public int ID_REPORTE { get; set; }
 
-        public string DESCRIPCION = null!;
+        public string DESCRIPCION { get; set; } = null!;
 
     }
 }

@@ -7,7 +7,7 @@ namespace BombaAustra.API.Controllers// <--- Agrega esto
 {
     //Tag de Controlador de api
     [ApiController]
-    [Route("api/bomberos")] //<--Enrutador, las peticiones vendran de aqui, se puede poner cualquier nombre
+    [Route("/api/bomberos")] //<--Enrutador, las peticiones vendran de aqui, se puede poner cualquier nombre
     public class BomberosController : ControllerBase //<-- Se agrega controller base para que sea completamente un controlador
     {
         private readonly DataContext _context;
@@ -25,7 +25,7 @@ namespace BombaAustra.API.Controllers// <--- Agrega esto
             return Ok(USUARIO);
         }
         [HttpGet] //<-- Se utiliza para obtener los datos de la BBDD
-        public async Task<IActionResult> GetASync() //<--Mejor es async , los async ocupan todos los procesadores del pc, lo hace mas eficiente
+        public async Task<IActionResult> Get() //<--Mejor es async , los async ocupan todos los procesadores del pc, lo hace mas eficiente
         {
             return Ok(await _context.USUARIOS.ToListAsync());
         }
