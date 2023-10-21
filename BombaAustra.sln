@@ -3,13 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.7.34031.279
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BombaAustra.Shared", "BombaAustra.Shared\BombaAustra.Shared.csproj", "{74A7984C-BCBB-4AC5-9E0E-B086A43264B2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BombaAustra.Shared", "BombaAustra.Shared\BombaAustra.Shared.csproj", "{74A7984C-BCBB-4AC5-9E0E-B086A43264B2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BombaAustra.API", "BombaAustra.API\BombaAustra.API.csproj", "{6A883F07-6272-41A2-9F3B-EC9E2D80A75A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BombaAustra.API", "BombaAustra.API\BombaAustra.API.csproj", "{6A883F07-6272-41A2-9F3B-EC9E2D80A75A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BombaAustra.WEB", "BombaAustra.WEB\BombaAustra.WEB.csproj", "{48002A72-CB54-4E7D-A69A-36F5E2B79A9E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BombaAustra.WEB", "BombaAustra.WEB\BombaAustra.WEB.csproj", "{48002A72-CB54-4E7D-A69A-36F5E2B79A9E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BombaAustra.Mobile", "BombaAustra.Mobile\BombaAustra.Mobile.csproj", "{0422AAE0-0226-42DD-95C1-19478F20EE92}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BombaAustra.Mobile", "BombaAustra.Mobile\BombaAustra.Mobile.csproj", "{0422AAE0-0226-42DD-95C1-19478F20EE92}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

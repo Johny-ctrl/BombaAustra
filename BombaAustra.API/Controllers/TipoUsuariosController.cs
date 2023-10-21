@@ -19,11 +19,17 @@ namespace BombaAustra.API.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult> PostAsync(Equipo EQUIPOS)
+        public async Task<ActionResult> PostAsync(TipoUsuario tipoUsuario)
         {
-            _context.EQUIPOS.Add(EQUIPOS);
+            _context.TIPO_USUARIOS.Add(tipoUsuario);
             await _context.SaveChangesAsync();
             return Ok();
+        }
+
+        [HttpGet] //<-- Se utiliza para obtener los datos de la BBDD
+        public async Task<IActionResult> Get() //<--Mejor es async , los async ocupan todos los procesadores del pc, lo hace mas eficiente
+        {
+            return Ok(await _context.TIPO_USUARIOS.ToListAsync());
         }
 
     }

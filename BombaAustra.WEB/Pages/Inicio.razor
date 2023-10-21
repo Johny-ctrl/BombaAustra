@@ -1,0 +1,54 @@
+﻿@page "/Inicio"
+@inject IRepository repository
+@inject NavigationManager Navigation
+
+<header>
+    <h3>Bienvenido! *usuario*</h3>
+</header>
+
+<body>
+    <div>
+        <button @onclick="EstadoVehiculos">Estado Vehiculo</button>
+        <button @onclick="Reportes">Reportes Existentes</button>
+        <button @onclick="AdminUsers">Administrar usuarios</button>
+        <button @onclick="AddUsers">Agregar Usuario</button>
+        <button @onclick="ConfUsers">Configuracion de cuenta</button>
+        <button @onclick="InfoVehi">Info Vehiculo</button>
+        <button>Vista Usuario</button>
+        <button>Perfil Costos</button>
+    </div>
+
+</body>
+
+@code {
+    public void EstadoVehiculos()
+    {
+        Navigation.NavigateTo("ListVehi");
+    }
+
+    public void Reportes()
+    {
+        Navigation.NavigateTo("Reportes");
+    }
+
+    public void InfoVehi()
+    {
+        Navigation.NavigateTo("InfoVehi");
+    }
+
+    public void AdminUsers()
+    {
+        Navigation.NavigateTo("AdminUsers");
+    }
+
+    public void AddUsers()
+    {
+        Navigation.NavigateTo("AddUsers");
+    }
+
+    public void ConfUsers()
+    {
+        Navigation.NavigateTo("ConfUsers");
+    }
+
+}

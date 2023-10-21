@@ -33,16 +33,48 @@ else
         </tbody>
     </table>
 
+    @if (TIPO_USUARIOS is null)
+    {
+        <p>Cargando</p>
+    }
+    else
+    {
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th></th>
+                    <th>Tipos de usuarios</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var tipo in TIPO_USUARIOS!)
+                {
+                    <tr>
+                        <td>
+                            <a class="btn btn-warning">Editar</a>
+                            <button class="btn btn-danger">Borrar</button>
+                        </td>
+                        <td>
+                            @tipo.DESCRIPCION
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
 }
 
 <!--codigo C#-->
 @code {
     //Se llama a la clase usuarios, el "?" indica que pueden ser nulos
     public List<Usuario>? USUARIOS { get; set; }
+    public List<TipoUsuario>? TIPO_USUARIOS { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
         var responseHttp = await repository.Get<List<Usuario>>("api/bomberos");//Devuelve la lista de usuario
         USUARIOS = responseHttp.Response;
+        var reponsehttptypes = await repository.Get<List<TipoUsuario>>("api/UsersTypes");//Devuelve la lista de usuario
+        TIPO_USUARIOS = reponsehttptypes.Response;
     }
 }

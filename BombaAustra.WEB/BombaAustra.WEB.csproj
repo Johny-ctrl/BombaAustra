@@ -8,9 +8,17 @@
 
   <ItemGroup>
     <Compile Remove="NewFolder\**" />
+    <Compile Remove="Pages\InicioSesion\**" />
+    <Compile Remove="Pages\Inicio\**" />
     <Content Remove="NewFolder\**" />
+    <Content Remove="Pages\InicioSesion\**" />
+    <Content Remove="Pages\Inicio\**" />
     <EmbeddedResource Remove="NewFolder\**" />
+    <EmbeddedResource Remove="Pages\InicioSesion\**" />
+    <EmbeddedResource Remove="Pages\Inicio\**" />
     <None Remove="NewFolder\**" />
+    <None Remove="Pages\InicioSesion\**" />
+    <None Remove="Pages\Inicio\**" />
   </ItemGroup>
 
   <ItemGroup>

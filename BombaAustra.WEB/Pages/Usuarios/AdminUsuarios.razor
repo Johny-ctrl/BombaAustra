@@ -1,0 +1,67 @@
+﻿@page "/AdminUsers"
+@inject IRepository repository
+@inject NavigationManager Navigation
+
+
+<header>
+<h3>AdminUsuarios</h3>
+</header>
+
+<body>
+    <input placeholder="Ingrese rut"/>
+    <button class="alert-primary">Buscar</button>
+
+@if (USUARIOS is null)
+    {
+    <p>Cargando</p>
+}
+else
+{
+    <table class="table table-striped">
+        <thead>
+            <tr class="table-bordered">
+                <th>Rut</th>
+                <th>Nombre</th>
+                <th>Tipo Usuario</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var usuario in USUARIOS!)
+            {
+                <tr>
+                    <td>
+                        @usuario.ID_RUT-@usuario.DV_RUT
+                    </td>
+                    <td>
+                        @usuario.NOMBRE
+                    </td>
+                    <td>
+                        @usuario.TIPO_USUARIOS
+                     </td>
+                    <td>
+                        <button>Eliminar</button>
+                        <button class="btn-warning">Editar</button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+}
+</body>
+
+@code {
+    public List<Usuario>? USUARIOS { get; set; }
+    public List<TipoUsuario>? tipoUsuarios { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        var Usuariosresponse = await repository.Get<List<Usuario>>("api/bomberos");//Devuelve la lista de usuario
+        USUARIOS = Usuariosresponse.Response;
+
+        var Tiposresponse = await repository.Get<List<TipoUsuario>>("api/UsersTypes");
+        tipoUsuarios = Tiposresponse.Response;
+    }
+    
+}
