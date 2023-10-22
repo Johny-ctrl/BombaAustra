@@ -1,0 +1,49 @@
+﻿@typeparam Titem
+
+@if(Mylist is null)
+{
+    @if(Loading is null)
+    {
+        <div class="align-items-center">
+            <img src="https://tamilnaducouncil.ac.in/wp-content/uploads/2018/10/loading-gif.gif">
+        </div>
+    }
+    else
+    {
+        @Loading
+    }
+}else if(Mylist.Count == 0)
+{ 
+    @if(NoRecords is null)
+    {
+        <div class="align-items-center">
+            <p>No existen registros!</p>
+        </div>
+    }
+    else
+    {
+        @NoRecords
+    }
+
+}
+else
+{
+    @Body
+}
+
+@code {
+    [Parameter]
+    public RenderFragment? Loading { get; set; } //<-- Se pasa un pedazo de codigo de razor, este sirve para generar pantallas de cargas
+
+    [Parameter]
+    public RenderFragment? NoRecords { get; set; }  //<-- se usa cuando no se encuentran registros
+
+    [Parameter]
+    [EditorRequired]
+    public RenderFragment Body { get; set; } = null!;
+
+    [Parameter]
+    [EditorRequired]
+    public List<Titem> Mylist { get; set; } = null!;
+
+}

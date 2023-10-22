@@ -24,10 +24,48 @@ namespace BombaAustra.API.Controllers// <--- Agrega esto
             await _context.SaveChangesAsync();//<--Aqui se guardan los datos
             return Ok(USUARIO);
         }
+
+        //Obtener por RUT
+        [HttpGet("{rut}")] //<-- Se utiliza para obtener los datos de la BBDD
+        public async Task<IActionResult> GetAsync(string rut) //<--Mejor es async , los async ocupan todos los procesadores del pc, lo hace mas eficiente
+        {
+            var usuario = await _context.USUARIOS.FirstOrDefaultAsync(x => x.ID_RUT == rut);
+            if (usuario == null)
+            {
+                return NotFound();  
+            }
+            return Ok(usuario);
+        }
+
+        [HttpPut] //<-- Se utilizara para ACTUALIZAR registros  a la BBDD
+        public async Task<ActionResult> Put(Usuario USUARIO) //<-- Action result son respuestas de HTTP, empieza por 200 es respuesta valida,400 es error
+        {
+            _context.Update(USUARIO);
+            await _context.SaveChangesAsync();//<--Aqui se guardan los datos
+            return Ok(USUARIO);
+        }
+
+
+        [HttpDelete("{rut}")] //<-- Se utiliza para ELIMINAR los datos de la BBDD
+        public async Task<IActionResult> DeleteAsync(string rut) //<--Mejor es async , los async ocupan todos los procesadores del pc, lo hace mas eficiente
+        {
+            var usuario = await _context.USUARIOS.FirstOrDefaultAsync(x => x.ID_RUT == rut);
+            if (usuario == null)
+            {
+                return NotFound();
+            }
+            _context.Remove(usuario);
+            await _context.SaveChangesAsync();//<--Aqui se guardan los datos
+            return NoContent();
+        }
+
+        //Get General
         [HttpGet] //<-- Se utiliza para obtener los datos de la BBDD
-        public async Task<IActionResult> Get() //<--Mejor es async , los async ocupan todos los procesadores del pc, lo hace mas eficiente
+        public async Task<IActionResult> GetASync()
         {
             return Ok(await _context.USUARIOS.ToListAsync());
         }
+
     }
+
 }

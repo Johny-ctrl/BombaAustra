@@ -4,16 +4,8 @@
 
 <h3>ListaVehiculos</h3>
 
-<body>
-    <input placeholder="Ingrese ID" />
-    <button class="alert-primary">Buscar</button>
-
-    @if (Equipos is null)
-    {
-        <p>Cargando</p>
-    }
-    else
-    {
+<GenericList Mylist="Equipos">
+    <Body>
         <table class="table table-striped">
             <thead>
                 <tr class="table-bordered">
@@ -48,12 +40,12 @@
                 }
             </tbody>
         </table>
+    </Body>
+</GenericList>
 
-    }
-</body>
 
 @code {
-    
+
     private List<Equipo>? Equipos { get; set; }
     private List<TipoEquipo>? tipoEquipos { get; set; }
 

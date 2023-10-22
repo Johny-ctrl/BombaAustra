@@ -32,5 +32,39 @@ namespace BombaAustra.API.Controllers
             return Ok(await _context.TIPO_USUARIOS.ToListAsync());
         }
 
+        //Obtener por RUT
+        [HttpGet("{id}")] //<-- Se utiliza para obtener los datos de la BBDD
+        public async Task<IActionResult> GetAsync(int id) //<--Mejor es async , los async ocupan todos los procesadores del pc, lo hace mas eficiente
+        {
+            var tipoUsuario = await _context.TIPO_USUARIOS.FirstOrDefaultAsync(x => x.ID_TIPO_USUARIO == id);
+            if (tipoUsuario == null)
+            {
+                return NotFound();
+            }
+            return Ok(tipoUsuario);
+        }
+
+        [HttpPut] //<-- Se utilizara para ACTUALIZAR registros  a la BBDD
+        public async Task<ActionResult> Put(TipoUsuario tipoUsuario) //<-- Action result son respuestas de HTTP, empieza por 200 es respuesta valida,400 es error
+        {
+            _context.Update(tipoUsuario);
+            await _context.SaveChangesAsync();//<--Aqui se guardan los datos
+            return Ok(tipoUsuario);
+        }
+
+
+        [HttpDelete("{id}")] //<-- Se utiliza para ELIMINAR los datos de la BBDD
+        public async Task<IActionResult> DeleteAsync(int id) //<--Mejor es async , los async ocupan todos los procesadores del pc, lo hace mas eficiente
+        {
+            var tipoUsuario = await _context.TIPO_USUARIOS.FirstOrDefaultAsync(x => x.ID_TIPO_USUARIO == id);
+            if (tipoUsuario == null)
+            {
+                return NotFound();
+            }
+            _context.Remove(tipoUsuario);
+            await _context.SaveChangesAsync();//<--Aqui se guardan los datos
+            return NoContent();
+        }
+
     }
 }
