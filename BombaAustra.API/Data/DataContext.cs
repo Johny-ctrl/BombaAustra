@@ -27,6 +27,12 @@ namespace BombaAustra.API.Data
 
         public DbSet<Compañia> COMPANIAS { get; set; }
 
+        public DbSet<ModeloVehiculo> MODELO_VEHICULO { get; set; }
+
+        public DbSet<Gastos> GASTOS { get; set; }
+
+        public DbSet<TipoVehiculo> TIPO_VEHICULO { get; set; }
+
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -47,6 +53,12 @@ namespace BombaAustra.API.Data
             modelBuilder.Entity<Equipo>().HasIndex(x => x.ID_EQUIPO).IsUnique();
 
             modelBuilder.Entity<Compañia>().HasIndex(x => x.ID_COMPAÑIA).IsUnique();
+
+            modelBuilder.Entity<ModeloVehiculo>().HasIndex(x => x.ID_MODELO).IsUnique();
+
+            modelBuilder.Entity<Gastos>().HasIndex(x => x.ID_GASTO).IsUnique();
+
+            modelBuilder.Entity<TipoVehiculo>().HasIndex(x => x.SIGLA).IsUnique();
 
         }
 

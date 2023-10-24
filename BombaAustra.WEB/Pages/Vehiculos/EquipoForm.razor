@@ -1,0 +1,83 @@
+﻿@inject SweetAlertService sweetAlertService
+
+
+<NavigationLock OnBeforeInternalNavigation="OnBeforeInternalNavigation" />
+
+<EditForm EditContext="editContext" OnValidSubmit="OnValidSubmit">
+    <DataAnnotationsValidator />
+
+    <div class="mb-3">
+        <label>ID Equipo:</label>
+        <div>
+            <InputNumber class="form-control" @bind-Value="@Equipos.ID_EQUIPO" />
+            <ValidationMessage For="@(() => Equipos.ID_EQUIPO)" />
+        </div>
+
+        <label>Tipó Equipo:</label>
+        <div>
+            <InputNumber class="form-control" @bind-Value="@Equipos.TIPO_EQUIPO" />
+            <ValidationMessage For="@(() => Equipos.TIPO_EQUIPO)" />
+        </div>
+
+        <label>Nombre Equipo:</label>
+        <div>
+            <InputText class="form-control" @bind-Value="@Equipos.NOMBRE_EQUIPO" />
+            <ValidationMessage For="@(() => Equipos.NOMBRE_EQUIPO)" />
+        </div>
+
+        <label>Estado equipo:</label>
+        <div>
+            <InputNumber class="form-control" @bind-Value="@Equipos.ESTADO_EQUIPO" />
+            <ValidationMessage For="@(() => Equipos.ESTADO_EQUIPO)" />
+        </div>
+    </div>
+    <button class="btn btn-primary" type="submit">Guardar cambios</button>
+    <button class="btn btn-success" @onclick="ReturnAction">Regresar</button>
+</EditForm>
+
+@code {
+    private EditContext editContext = null!;
+
+    [Parameter]
+    [EditorRequired]
+    public Equipo Equipos { get; set; } = null!;
+
+    [Parameter]
+    [EditorRequired]
+    public EventCallback OnValidSubmit { get; set; }
+
+    [Parameter]
+    [EditorRequired]
+    public EventCallback ReturnAction { get; set; }
+
+    public Boolean formPostedSucces { get; set; }
+
+    protected override void OnInitialized()
+    {
+        editContext = new(Equipos);
+    }
+
+    private async Task OnBeforeInternalNavigation(LocationChangingContext context)
+    {
+        var formWasModify = editContext.IsModified();
+        if (!formWasModify || formPostedSucces)
+        {
+            return;
+        }
+        var result = await sweetAlertService.FireAsync(new SweetAlertOptions
+            {
+                Title = "Confirmacion",
+                Text = "¿Desea volver y perder los cambios realizados?",
+                Icon = SweetAlertIcon.Warning,
+                ShowCancelButton = true,
+                CancelButtonText = "No",
+                ConfirmButtonText = "SI"
+            });
+        var confirm = !string.IsNullOrEmpty(result.Value);
+        if (confirm)
+        {
+            return;
+        }
+        context.PreventNavigation();
+    }
+}

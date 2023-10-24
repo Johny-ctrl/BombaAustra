@@ -11,26 +11,31 @@
             <InputText class="form-control" @bind-Value="@Usuario.ID_RUT" />
             <ValidationMessage For="@(() => Usuario.ID_RUT)" />
         </div>
-        <label>DV RUT</label>
+
+        <label>DV RUT:</label>
         <div> 
-            <InputText class="form-control" @bind-bind-Value="@Usuario.DV_RUT" />
+            <InputText class="form-control" @bind-Value="@Usuario.DV_RUT"/>
             <ValidationMessage For="@(() => Usuario.DV_RUT)" />
         </div>
+
         <label>Nombre:</label>
         <div>
             <InputText class="form-control" @bind-Value="@Usuario.NOMBRE" />
             <ValidationMessage For="@(() => Usuario.NOMBRE)" />
         </div>
+
         <label>Apellido P:</label>
         <div>
             <InputText class="form-control" @bind-Value="@Usuario.APELLIDO_P" />
             <ValidationMessage For="@(() => Usuario.APELLIDO_P)" />
         </div>
+
         <label>Apellido M:</label>
         <div>
             <InputText class="form-control" @bind-Value="@Usuario.APELLIDO_M" />
             <ValidationMessage For="@(() => Usuario.APELLIDO_M)" />
         </div>
+
         <label>TIPO USUARIO:</label>
         <div>
             <InputNumber class="form-control" @bind-Value="@Usuario.TIPO_USUARIOS"/>
