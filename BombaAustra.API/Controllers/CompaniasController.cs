@@ -19,9 +19,25 @@ namespace BombaAustra.API.Controllers
         [HttpPost]
         public async Task<ActionResult> PostASync(Compañia compañia)
         {
-            _context.COMPANIAS.Add(compañia);
-            await _context.SaveChangesAsync();
-            return Ok();
+            try
+            {
+                _context.COMPANIAS.Add(compañia);
+                await _context.SaveChangesAsync();
+                return Ok();
+            }
+            catch (DbUpdateException dbUpdateException)
+            {
+                if (dbUpdateException.InnerException!.Message.Contains("duplicate"))
+                {
+                    return BadRequest("Esta compañia ya existe");
+                }
+
+                return BadRequest(dbUpdateException.Message);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         [HttpGet]
@@ -45,9 +61,25 @@ namespace BombaAustra.API.Controllers
         [HttpPut] //<-- Se utilizara para ACTUALIZAR registros  a la BBDD
         public async Task<ActionResult> Put(Compañia compania) //<-- Action result son respuestas de HTTP, empieza por 200 es respuesta valida,400 es error
         {
-            _context.Update(compania);
-            await _context.SaveChangesAsync();//<--Aqui se guardan los datos
-            return Ok(compania);
+            try
+            {
+                _context.Update(compania);
+                await _context.SaveChangesAsync();//<--Aqui se guardan los datos
+                return Ok(compania);
+            }
+            catch (DbUpdateException dbUpdateException)
+            {
+                if (dbUpdateException.InnerException!.Message.Contains("duplicate"))
+                {
+                    return BadRequest("Esta compañia ya existe");
+                }
+
+                return BadRequest(dbUpdateException.Message);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
 

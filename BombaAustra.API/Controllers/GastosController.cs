@@ -25,9 +25,25 @@ namespace BombaAustra.API.Controllers
         [HttpPost]
         public async Task<ActionResult> PostAsync(Gastos gasto)
         {
-            _context.GASTOS.Add(gasto);
-            await _context.SaveChangesAsync();
-            return Ok();
+            try
+            {
+                _context.GASTOS.Add(gasto);
+                await _context.SaveChangesAsync();
+                return Ok();
+            }
+            catch (DbUpdateException dbUpdateException)
+            {
+                if (dbUpdateException.InnerException!.Message.Contains("duplicate"))
+                {
+                    return BadRequest("Este gasto ya fue creado");
+                }
+
+                return BadRequest(dbUpdateException.Message);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
 
@@ -46,9 +62,25 @@ namespace BombaAustra.API.Controllers
         [HttpPut]
         public async Task<ActionResult> Put(Gastos gastos) //<--Mejor es async , los async ocupan todos los procesadores del pc, lo hace mas eficiente
         {
-            _context.Update(gastos);
-            await _context.SaveChangesAsync();//<--Aqui se guardan los datos
-            return Ok(gastos);
+            try
+            {
+                _context.Update(gastos);
+                await _context.SaveChangesAsync();//<--Aqui se guardan los datos
+                return Ok(gastos);
+            }
+            catch (DbUpdateException dbUpdateException)
+            {
+                if (dbUpdateException.InnerException!.Message.Contains("duplicate"))
+                {
+                    return BadRequest("Este gasto ya fue creado");
+                }
+
+                return BadRequest(dbUpdateException.Message);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         [HttpDelete("{id}")] //<-- Se utiliza para ELIMINAR los datos de la BBDD

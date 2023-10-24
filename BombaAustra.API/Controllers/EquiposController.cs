@@ -19,9 +19,25 @@ namespace BombaAustra.API.Controllers
         [HttpPost]
         public async Task<IActionResult> PostAsync(Equipo equipo)
         {
-            _context.EQUIPOS.Add(equipo);
-            await _context.SaveChangesAsync();
-            return Ok();
+            try
+            {
+                _context.EQUIPOS.Add(equipo);
+                await _context.SaveChangesAsync();
+                return Ok();
+            }
+            catch (DbUpdateException dbUpdateException)
+            {
+                if (dbUpdateException.InnerException!.Message.Contains("duplicate"))
+                {
+                    return BadRequest("Este equipo ya existe");
+                }
+
+                return BadRequest(dbUpdateException.Message);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         [HttpGet]
@@ -45,9 +61,25 @@ namespace BombaAustra.API.Controllers
         [HttpPut] //<-- Se utilizara para ACTUALIZAR registros  a la BBDD
         public async Task<ActionResult> Put(Equipo equipo) //<-- Action result son respuestas de HTTP, empieza por 200 es respuesta valida,400 es error
         {
-            _context.Update(equipo);
-            await _context.SaveChangesAsync();//<--Aqui se guardan los datos
-            return Ok(equipo);
+            try
+            {
+                _context.Update(equipo);
+                await _context.SaveChangesAsync();//<--Aqui se guardan los datos
+                return Ok(equipo);
+            }
+            catch (DbUpdateException dbUpdateException)
+            {
+                if (dbUpdateException.InnerException!.Message.Contains("duplicate"))
+                {
+                    return BadRequest("Este equipo ya existe");
+                }
+
+                return BadRequest(dbUpdateException.Message);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
 

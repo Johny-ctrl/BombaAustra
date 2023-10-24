@@ -26,9 +26,25 @@ namespace BombaAustra.API.Controllers
         [HttpPost]
         public async Task<ActionResult> PostAsync(ModeloVehiculo modeloVehiculo)
         {
-            _context.MODELO_VEHICULO.Add(modeloVehiculo);
-            await _context.SaveChangesAsync();
-            return Ok();
+            try
+            {
+                _context.MODELO_VEHICULO.Add(modeloVehiculo);
+                await _context.SaveChangesAsync();
+                return Ok();
+            }
+            catch (DbUpdateException dbUpdateException)
+            {
+                if (dbUpdateException.InnerException!.Message.Contains("duplicate"))
+                {
+                    return BadRequest("Modelo de vehiculo ya existente");
+                }
+
+                return BadRequest(dbUpdateException.Message);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
 
@@ -47,9 +63,25 @@ namespace BombaAustra.API.Controllers
         [HttpPut]
         public async Task<ActionResult> Put(ModeloVehiculo modeloVehiculo) //<--Mejor es async , los async ocupan todos los procesadores del pc, lo hace mas eficiente
         {
-            _context.Update(modeloVehiculo);
-            await _context.SaveChangesAsync();//<--Aqui se guardan los datos
-            return Ok(modeloVehiculo);
+            try
+            {
+                _context.Update(modeloVehiculo);
+                await _context.SaveChangesAsync();//<--Aqui se guardan los datos
+                return Ok(modeloVehiculo);
+            }
+            catch (DbUpdateException dbUpdateException)
+            {
+                if (dbUpdateException.InnerException!.Message.Contains("duplicate"))
+                {
+                    return BadRequest("Modelo de vehiculo ya existente");
+                }
+
+                return BadRequest(dbUpdateException.Message);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         [HttpDelete("{id}")] //<-- Se utiliza para ELIMINAR los datos de la BBDD

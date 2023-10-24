@@ -1,0 +1,64 @@
+﻿@page "/ListVehi/editarEquipo/{ID_EQUIPO:int}"
+@inject IRepository repository
+@inject NavigationManager navigate
+@inject SweetAlertService swwetAlertService
+
+<h3>Modificar Equipo</h3>
+
+@if (equipo is null)
+{
+    <p>Cargando...</p>
+}
+else
+{
+    <EquipoForm @ref="equipoForm" Equipos="equipo" OnValidSubmit="EditAsync" ReturnAction="Return"/>
+}
+@code {
+    //Editar Equipos
+    private Equipo? equipo;
+    private EquipoForm? equipoForm;
+
+
+    [Parameter]
+    public int ID_EQUIPO { get; set; }
+
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        //para equipo
+        var responseEHttp = await repository.Get<Equipo>($"/api/Equipos/{ID_EQUIPO}");
+        if (responseEHttp.Error)
+        {
+            if (responseEHttp.HttpResponseMessage.StatusCode == System.Net.HttpStatusCode.NotFound)
+            {
+                navigate.NavigateTo("/ListVehi");
+                return;
+            }
+            var message = await responseEHttp.GetErrorMessageAsync();
+            await swwetAlertService.FireAsync("Error", message, SweetAlertIcon.Error);
+            return;
+        }
+        equipo = responseEHttp.Response;
+    }
+
+    private async Task EditAsync()
+    {
+        //Equipo
+        var responseEHttp = await repository.Put("/api/Equipos", equipo);
+        if (responseEHttp.Error)
+        {
+            var message = await responseEHttp.GetErrorMessageAsync();
+            await swwetAlertService.FireAsync("Error", message, SweetAlertIcon.Error);
+            return;
+        }
+        equipoForm!.formPostedSucces = true;
+        navigate.NavigateTo("/ListVehi");
+    }
+
+    private void Return()
+    {
+        equipoForm!.formPostedSucces = true;
+        navigate.NavigateTo("/ListVehi");
+    }
+}

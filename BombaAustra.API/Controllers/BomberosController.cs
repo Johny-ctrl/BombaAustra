@@ -20,9 +20,25 @@ namespace BombaAustra.API.Controllers// <--- Agrega esto
         [HttpPost] //<-- Se utilizara para agregar registros  a la BBDD
         public async Task<ActionResult> Post(Usuario USUARIO) //<-- Action result son respuestas de HTTP, empieza por 200 es respuesta valida,400 es error
         {
-            _context.Add(USUARIO);
-            await _context.SaveChangesAsync();//<--Aqui se guardan los datos
-            return Ok(USUARIO);
+            try
+            {
+                _context.Add(USUARIO);
+                await _context.SaveChangesAsync();//<--Aqui se guardan los datos
+                return Ok(USUARIO);
+            }
+            catch (DbUpdateException dbUpdateException)
+            {
+                if (dbUpdateException.InnerException!.Message.Contains("duplicate"))
+                {
+                    return BadRequest("Este usuario ya existe");
+                }
+
+                return BadRequest(dbUpdateException.Message);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         //Obtener por RUT
@@ -40,9 +56,25 @@ namespace BombaAustra.API.Controllers// <--- Agrega esto
         [HttpPut] //<-- Se utilizara para ACTUALIZAR registros  a la BBDD
         public async Task<ActionResult> Put(Usuario USUARIO) //<-- Action result son respuestas de HTTP, empieza por 200 es respuesta valida,400 es error
         {
-            _context.Update(USUARIO);
-            await _context.SaveChangesAsync();//<--Aqui se guardan los datos
-            return Ok(USUARIO);
+            try
+            {
+                _context.Update(USUARIO);
+                await _context.SaveChangesAsync();//<--Aqui se guardan los datos
+                return Ok(USUARIO);
+            }
+            catch (DbUpdateException dbUpdateException)
+            {
+                if (dbUpdateException.InnerException!.Message.Contains("duplicate"))
+                {
+                    return BadRequest("Este usuario ya existe");
+                }
+
+                return BadRequest(dbUpdateException.Message);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
 

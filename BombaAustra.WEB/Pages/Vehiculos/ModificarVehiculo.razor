@@ -6,7 +6,8 @@
 
 <h3>Modificar</h3>
 
-@if(vehiculo is null)
+
+@if (vehiculo is null)
 {
     <p>Cargando...</p>
 }
@@ -15,17 +16,24 @@ else
     <VehiculoForm @ref="vehiculoForm" Vehiculo="vehiculo" OnValidSubmit="EditAsync" ReturnAction="Return" />
 }
 
+
 @code {
 
     //Editar Vehiculos
     private TipoVehiculo? vehiculo;
     private VehiculoForm? vehiculoForm;
 
+
+
     [Parameter]
     public string SIGLA { get; set; } = null!;
 
+
+
+
     protected override async Task OnInitializedAsync()
     {
+        //para vehiculo
         var responseVHttp = await repository.Get<TipoVehiculo>($"/api/TipoV/{SIGLA}");
         if (responseVHttp.Error)
         {
@@ -39,10 +47,12 @@ else
             return;
         }
         vehiculo = responseVHttp.Response;
+
     }
 
     private async Task EditAsync()
     {
+        //Vehiculo
         var responseVHttp = await repository.Put("/api/TipoV", vehiculo);
         if (responseVHttp.Error)
         {
@@ -56,9 +66,13 @@ else
     private void Return()
     {
         vehiculoForm!.formPostedSucces = true;
-        navigate.NavigateTo("/ListVehi");   
+        navigate.NavigateTo("/ListVehi");
+
+
     }
 
-    //Editar Equipos
-    //private Equipo? equipo;
+
+
+
+
 }

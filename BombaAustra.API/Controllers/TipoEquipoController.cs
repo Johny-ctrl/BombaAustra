@@ -21,9 +21,25 @@ namespace BombaAustra.API.Controllers
 
         public async Task<ActionResult> Post(TipoEquipo TIPO_EQUIPO)
         {
-            _context.TIPO_EQUIPO.Add(TIPO_EQUIPO);
-            await _context.SaveChangesAsync();
-            return Ok();
+            try
+            {
+                _context.TIPO_EQUIPO.Add(TIPO_EQUIPO);
+                await _context.SaveChangesAsync();
+                return Ok();
+            }
+            catch (DbUpdateException dbUpdateException)
+            {
+                if (dbUpdateException.InnerException!.Message.Contains("duplicate"))
+                {
+                    return BadRequest("Tipo de equipo ya existente");
+                }
+
+                return BadRequest(dbUpdateException.Message);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
 
         }
 
@@ -48,9 +64,25 @@ namespace BombaAustra.API.Controllers
         [HttpPut] //<-- Se utilizara para ACTUALIZAR registros  a la BBDD
         public async Task<ActionResult> Put(TipoEquipo tipoEquipo) //<-- Action result son respuestas de HTTP, empieza por 200 es respuesta valida,400 es error
         {
-            _context.Update(tipoEquipo);
-            await _context.SaveChangesAsync();//<--Aqui se guardan los datos
-            return Ok(tipoEquipo);
+            try
+            {
+                _context.Update(tipoEquipo);
+                await _context.SaveChangesAsync();//<--Aqui se guardan los datos
+                return Ok(tipoEquipo);
+            }
+            catch (DbUpdateException dbUpdateException)
+            {
+                if (dbUpdateException.InnerException!.Message.Contains("duplicate"))
+                {
+                    return BadRequest("Tipo de equipo ya existente");
+                }
+
+                return BadRequest(dbUpdateException.Message);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
 

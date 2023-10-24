@@ -1,10 +1,12 @@
 ﻿@page "/ListVehi"
 @inject IRepository repository
 @inject NavigationManager Navigation
+@inject SweetAlertService sweetAlertService
 
 <h3>ListaVehiculos</h3>
 <a class="btn btn-primary mb-3" href="/ListVehi/AddVehi">Nuevo Vehiculo</a>
 <a class="btn btn-primary mb-3" href="/ListVehi/AgregarEqui">Nuevo Equipo</a>
+
 <h3>Equipos</h3>
 <GenericList Mylist="Equipos">
     <Body>
@@ -35,8 +37,8 @@
                             @equipo.TIPO_EQUIPO
                         </td>
                         <td>
-                            <a class="btn btn-warning" href="">Editar</a>
-                            <button>Eliminar</button>
+                            <a href="/ListVehi/editarEquipo/@equipo.ID_EQUIPO">Edit</a>
+                            <button @onclick=@(() => DeleteEAsync(equipo.ID_EQUIPO))>Eliminar</button>
                         </td>
                     </tr>
                 }
@@ -44,8 +46,9 @@
         </table>
     </Body>
 </GenericList>
+
 <h3>Vehiculos</h3>
-<GenericList Mylist="Equipos">
+<GenericList Mylist="vehiculos">
     <Body>
         <table class="table table-striped">
             <thead>
@@ -79,7 +82,7 @@
                         </td>
                         <td>
                             <a class="btn btn-warning" href="/ListVehi/edit/@vehiculo.SIGLA">Editar</a>
-                            <button>Eliminar</button>
+                            <button class="btn btn-danger" @onclick=@(() => DeleteAsync(vehiculo.SIGLA))>Eliminar</button>
                         </td>
                     </tr>
                 }
@@ -97,11 +100,79 @@
 
     protected override async Task OnInitializedAsync()
     {
+        await LoadAsync();
+    }
+
+    private async Task LoadAsync()
+    {
         var EquipoResponse = await repository.Get<List<Equipo>>("api/Equipos");//Devuelve la lista de usuario
         Equipos = EquipoResponse.Response;
         var vehiculoEResponse = await repository.Get<List<TipoVehiculo>>("/api/TipoV");
         vehiculos = vehiculoEResponse.Response;
     }
 
+    private async Task DeleteAsync(string SIGLA)
+    {
+        var result = await sweetAlertService.FireAsync(new SweetAlertOptions
+            {
+                Title = "Atencion",
+                Text = "¿Esta seguro que decea borrar este vehiculo?",
+                Icon = SweetAlertIcon.Warning,
+                ShowCancelButton = true,
+                CancelButtonText = "No",
+                ConfirmButtonText = "SI"
+            });
+        var confirm = string.IsNullOrEmpty(result.Value);
+        if (confirm)
+        {
+            return;
+        }
+
+        var responseHtpp = await repository.Delete($"/api/TipoV/{SIGLA}");
+        if (responseHtpp.Error)
+        {
+            if (responseHtpp.HttpResponseMessage.StatusCode != HttpStatusCode.NotFound)
+            {
+                var message = await responseHtpp.GetErrorMessageAsync();
+                await sweetAlertService.FireAsync("Error", message, SweetAlertIcon.Error);
+                return;
+
+            }
+        }
+        await LoadAsync();
+
+    }
+
+    private async Task DeleteEAsync(int ID)
+    {
+        var result = await sweetAlertService.FireAsync(new SweetAlertOptions
+            {
+                Title = "Atencion",
+                Text = "¿Esta seguro que decea borrar este vehiculo?",
+                Icon = SweetAlertIcon.Warning,
+                ShowCancelButton = true,
+                CancelButtonText = "No",
+                ConfirmButtonText = "SI"
+            });
+        var confirm = string.IsNullOrEmpty(result.Value);
+        if (confirm)
+        {
+            return;
+        }
+
+        var responseEHtpp = await repository.Delete($"/api/Equipos/{ID}");
+        if (responseEHtpp.Error)
+        {
+            if (responseEHtpp.HttpResponseMessage.StatusCode != HttpStatusCode.NotFound)
+            {
+                var message = await responseEHtpp.GetErrorMessageAsync();
+                await sweetAlertService.FireAsync("Error", message, SweetAlertIcon.Error);
+                return;
+            }
+        }
+
+        await LoadAsync();
+
+    }
 
 }
