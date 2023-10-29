@@ -4,14 +4,27 @@
 
 
 <header>
-    <h3>AdminUsuarios</h3>
+    <h3>Lista de usuarios</h3>
 </header>
+
+<div class="mb-2" style="display: flex; flex-wrap:wrap; align-items: center;">
+    <div>
+        <a class="btn btn-primary mb-3" href="/Usuarios/agregar">Nuevo Usuario</a>
+    </div>
+
+    <div class="mx-2">
+        <input style="width: 400px;" type="text" class="form-control" id="titulo" placeholder="Buscar Usuario..." @bind-value="Filter" />
+    </div>
+    <div>
+        <button type="button" class="btn btn-outline-primary" @onclick="ApplyFilterAsync">Filtrar</button>
+        <button type="button" class="btn btn-outline-danger" @onclick="CleanFilterAsync">Limpiar</button>
+    </div>
+</div>
 
 <Paginacion CurrentPage="currentPage"
             TotalPages="totalPages"
             SelectedPage="SelectedPageAsync" />
 
-<a class="btn btn-primary mb-3" href="/Usuarios/agregar">Nuevo Usuario</a>
 
 <GenericList Mylist="USUARIOS">
     <Body>
@@ -51,6 +64,15 @@
 </GenericList>
 
 @code {
+
+    [Parameter]
+    [SupplyParameterFromQuery]
+    public string Page { get; set; } = string.Empty;
+
+    [Parameter]
+    [SupplyParameterFromQuery]
+    public string Filter { get; set; } = string.Empty;
+
     public List<Usuario>? USUARIOS { get; set; }
     public List<TipoUsuario>? tipoUsuarios { get; set; }
     private int currentPage = 1;
@@ -72,13 +94,42 @@
 
     private async Task LoadAsync(int page = 1)
     {
-        string url1 = $"api/bomberos?={page}";
-        string url2 = $"api/bomberos/totalPages";
+        if (!string.IsNullOrWhiteSpace(Page))
+        {
+            page = Convert.ToInt32(Page);
+        }
+
+        string url1 = string.Empty;
+        string url2 = string.Empty;
+
+        if (string.IsNullOrEmpty(Filter))
+        {
+            url1 = $"api/bomberos?page={page}";
+            url2 = $"api/bomberos/totalPages";
+        }
+        else
+        {
+            url1 = $"api/bomberos?page={page}&filter={Filter}";
+            url2 = $"api/bomberos/totalPages?filter={Filter}";
+        }
 
         var vehiculoEResponse = await repository.Get<List<Usuario>>(url1);
         var vehiculoEResponse2 = await repository.Get<int>(url2);
         USUARIOS = vehiculoEResponse.Response!;
         totalPages = vehiculoEResponse2.Response!;
+    }
+
+    private async Task CleanFilterAsync()
+    {
+        Filter = string.Empty;
+        await ApplyFilterAsync();
+    }
+
+    private async Task ApplyFilterAsync()
+    {
+        int page = 1;
+        await LoadAsync(page);
+        await SelectedPageAsync(page);
     }
 
 }
