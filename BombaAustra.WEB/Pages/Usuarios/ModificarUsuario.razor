@@ -1,0 +1,62 @@
+﻿@page "/AdminUsers/ModUsers/{ID_RUT}"
+@inject IRepository repository
+@inject NavigationManager navigate
+@inject SweetAlertService swwetAlertService
+
+<h3>Modificar Usuario</h3>
+
+@if (usuario is null)
+{
+    <p>Cargando...</p>
+}
+else
+{
+    <UsuarioForm @ref="usuarioForm" Usuario="usuario" OnValidSubmit="EditAsync" ReturnAction="Return" />
+}
+
+@code {
+    private Usuario? usuario;
+    private UsuarioForm? usuarioForm;
+
+    [Parameter]
+    public string ID_RUT { get; set; } = null!;
+
+    protected override async Task OnInitializedAsync()
+    {
+        //Usuario
+        var responseHttp = await repository.Get<Usuario>($"/api/bomberos/{ID_RUT}");
+        if (responseHttp.Error)
+        {
+            if (responseHttp.HttpResponseMessage.StatusCode == System.Net.HttpStatusCode.NotFound)
+            {
+                navigate.NavigateTo("/AdminUsers");
+                return;
+            }
+            var message = await responseHttp.GetErrorMessageAsync();
+            await swwetAlertService.FireAsync("Error", message, SweetAlertIcon.Error); 
+            return;
+        }
+        usuario = responseHttp.Response;
+    }
+
+    private async Task EditAsync()
+    {
+        //Usuario
+        var responseEHttp = await repository.Put("/api/bomberos", usuario);
+        if (responseEHttp.Error)
+        {
+            var message = await responseEHttp.GetErrorMessageAsync();
+            await swwetAlertService.FireAsync("Error", message, SweetAlertIcon.Error);
+            return;
+        }
+        usuarioForm!.formPostedSucces = true;
+        navigate.NavigateTo("/AdminUsers");
+    }
+
+    private void Return()
+    {
+        usuarioForm!.formPostedSucces = true;
+        navigate.NavigateTo("/AdminUsers");
+    }
+
+}

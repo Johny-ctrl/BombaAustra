@@ -1,4 +1,6 @@
 ﻿using BombaAustra.API.Data;
+using BombaAustra.API.Helpers;
+using BombaAustra.Shared.DTOs;
 using BombaAustra.Shared.Entities;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -92,11 +94,42 @@ namespace BombaAustra.API.Controllers// <--- Agrega esto
         }
 
         //Get General
-        [HttpGet] //<-- Se utiliza para obtener los datos de la BBDD
-        public async Task<IActionResult> GetASync()
+        [HttpGet]
+        public async Task<IActionResult> GetAsync([FromQuery] PaginacionDTO paginacion)
         {
-            return Ok(await _context.USUARIOS.ToListAsync());
+            //Paginacion
+            var queryable = _context.USUARIOS.AsQueryable();
+
+            //esto aplica el filtro
+            if (!string.IsNullOrWhiteSpace(paginacion.Filter))
+            {
+                queryable = queryable.Where(x => x.ID_RUT.ToLower().Contains(paginacion.Filter.ToLower()));
+            }
+            return Ok(await queryable
+                .OrderBy(x => x.ID_RUT )
+                .Paginate(paginacion)
+                .ToListAsync());
         }
+
+
+        [HttpGet("totalPages")]
+        public async Task<ActionResult> GetPages([FromQuery] PaginacionDTO paginacion)
+        {
+            //Paginacion!
+            var queryable = _context.USUARIOS.AsQueryable();
+            //Esto aplica el filtro
+            if (!string.IsNullOrWhiteSpace(paginacion.Filter))
+            {
+                queryable = queryable.Where(x => x.ID_RUT.ToLower().Contains(paginacion.Filter.ToLower()));
+            }
+
+            double count = await queryable.CountAsync();
+            double totalPages = Math.Ceiling(count / paginacion.RecordsNumber);
+            return Ok(totalPages);
+        }
+
+
+
 
     }
 

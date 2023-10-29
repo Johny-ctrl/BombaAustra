@@ -2,10 +2,13 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using BombaAustra.API.Data;
+using BombaAustra.API.Helpers;
+using BombaAustra.Shared.DTOs;
+
 namespace BombaAustra.API.Controllers
 {
     [ApiController]
-    [Route ("/api/TipoV")]
+    [Route("/api/TipoV")]
     public class TipoVehiculoController : ControllerBase
     {
         private readonly DataContext _context;
@@ -14,12 +17,44 @@ namespace BombaAustra.API.Controllers
         {
             _context = context;
         }
+
+
         //Get de todo los datos
         [HttpGet]
-        public async Task<IActionResult> GetAsync() //<--Mejor es async , los async ocupan todos los procesadores del pc, lo hace mas eficiente
+        public async Task<IActionResult> GetAsync([FromQuery] PaginacionDTO paginacion) //<--Mejor es async , los async ocupan todos los procesadores del pc, lo hace mas eficiente
         {
-            return Ok(await _context.TIPO_VEHICULO.ToListAsync());
+            //Paginacion
+            var queryable = _context.TIPO_VEHICULO.AsQueryable();
+
+            //esto aplica el filtro
+            if (!string.IsNullOrWhiteSpace(paginacion.Filter))
+            {
+                queryable = queryable.Where(x => x.SIGLA.ToLower().Contains(paginacion.Filter.ToLower()));
+            }
+
+
+            return Ok(await queryable
+                .OrderBy(x => x.SIGLA)
+                .Paginate(paginacion)
+                .ToListAsync());
         }
+
+        [HttpGet("totalPages")]
+        public async Task<ActionResult> GetPages([FromQuery] PaginacionDTO paginacion)
+        {
+            //Paginacion!
+            var queryable = _context.TIPO_VEHICULO.AsQueryable();
+            //Esto aplica el filtro
+            if (!string.IsNullOrWhiteSpace(paginacion.Filter))
+            {
+                queryable = queryable.Where(x => x.SIGLA.ToLower().Contains(paginacion.Filter.ToLower()));
+            }
+
+            double count = await queryable.CountAsync();
+            double totalPages = Math.Ceiling(count / paginacion.RecordsNumber);
+            return Ok(totalPages);
+        }
+
 
         [HttpPost]
         public async Task<ActionResult> PostAsync(TipoVehiculo tipoVehiculo)
@@ -39,17 +74,18 @@ namespace BombaAustra.API.Controllers
 
                 return BadRequest(dbUpdateException.Message);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 return BadRequest(ex.Message);
             }
 
-            
+
         }
 
 
         //Obtener por ID
         [HttpGet("{sigla}")] //<-- Se utiliza para obtener los datos de la BBDD
+
         public async Task<IActionResult> GetAsync(string sigla) //<--Mejor es async , los async ocupan todos los procesadores del pc, lo hace mas eficiente
         {
             var tipovehiculo = await _context.TIPO_VEHICULO.FirstOrDefaultAsync(x => x.SIGLA == sigla);

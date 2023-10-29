@@ -1,9 +1,80 @@
-﻿@page "/InfoVehi"
+﻿@page "/ListVehi/Info/{id}"
 @inject IRepository repository
-@inject NavigationManager Navigation
+@inject NavigationManager navigate
+@inject SweetAlertService swwetAlertService
 
-<h3>InfoVehiculos</h3>
+<h3>Informacion de @vehiculo!.SIGLA</h3>
+
+
+<table class="table table-striped">
+    <thead>
+        <tr class="table-bordered">
+            <th>Sigla</th>
+            <th>Patente</th>
+            <th>Marca</th>
+            <th>Revision tecnica</th>
+            <th>Id_Modelo</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+                @vehiculo!.SIGLA
+            </td>
+            <td>
+                @vehiculo!.PATENTE
+            </td>
+            <td>
+                @vehiculo!.MARCA
+            </td>
+            <td>
+                @vehiculo!.ULTIMA_REVISION_TEC
+            </td>
+            <td>
+                @vehiculo!.ID_MODELO
+            </td>
+        </tr>
+    </tbody>
+</table>
+
+<a class="btn btn-warning" href="/ListVehi/edit/@vehiculo.SIGLA">Editar</a>
+
 
 @code {
+
+    //Editar Vehiculos
+    private TipoVehiculo? vehiculo;
+    private List<TipoVehiculo>? vehiculos;
+
+
+    [Parameter]
+    public string id { get; set; } = null!;
+
+
+
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadAsync();
+    }
+    private async Task LoadAsync()
+    {
+        //para vehiculo
+        var responseVHttp = await repository.Get<TipoVehiculo>($"/api/TipoV/{id}");
+        if (responseVHttp.Error)
+        {
+            if (responseVHttp.HttpResponseMessage.StatusCode == System.Net.HttpStatusCode.NotFound)
+            {
+                navigate.NavigateTo("/ListVehi");
+                return;
+            }
+            var message = await responseVHttp.GetErrorMessageAsync();
+            await swwetAlertService.FireAsync("Error", message, SweetAlertIcon.Error);
+            return;
+        }
+        vehiculo = responseVHttp.Response;
+        //vehiculos = vehiculo!.SIGLA!.ToList();
+    }
 
 }

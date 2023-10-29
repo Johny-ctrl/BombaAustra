@@ -14,7 +14,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 //agregamos conexion BD(Inyeccion BBDD)
-builder.Services.AddDbContext<DataContext>(x => x.UseSqlServer("name=ConexionSQL"));
+builder.Services.AddDbContext<DataContext>(x => x.UseSqlServer("name=ConexionAWSSQL"));
 
 var app = builder.Build();
 
