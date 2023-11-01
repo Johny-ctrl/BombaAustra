@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Identity;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -8,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace BombaAustra.Shared.Entities
 {
-    public class Usuario : IdentityUser
+    public class Usuario
     {
         [Key] 
         public string ID_RUT { get; set; } = null!;

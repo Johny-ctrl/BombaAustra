@@ -1,10 +1,6 @@
 //se configura el servicio y el comportamiento de la api
 
 using BombaAustra.API.Data;
-using BombaAustra.API.Helpers;
-using BombaAustra.Shared.Entities;
-using BombaAustra.Shared.Enums;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -20,21 +16,6 @@ builder.Services.AddSwaggerGen();
 //agregamos conexion BD(Inyeccion BBDD)
 builder.Services.AddDbContext<DataContext>(x => x.UseSqlServer("name=ConexionAWSSQL"));
 
-builder.Services.AddIdentity<Usuario, IdentityRole>(x =>
-{
-    x.User.RequireUniqueEmail = true;
-    x.Password.RequireDigit = false;
-    x.Password.RequiredUniqueChars = 0;
-    x.Password.RequireLowercase = false;
-    x.Password.RequireNonAlphanumeric = false;
-    x.Password.RequireUppercase = false;
-})
-    .AddEntityFrameworkStores<DataContext>()
-    .AddDefaultTokenProviders();
-
-builder.Services.AddScoped<IUserHelper, UserHelper>();
-
-
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -45,7 +26,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-app.UseAuthentication();
+
 app.UseAuthorization();
 
 app.MapControllers();
@@ -55,9 +36,7 @@ app.UseCors(x => x
     .AllowAnyMethod()
     .AllowAnyHeader()
     .SetIsOriginAllowed(origin => true)
-.AllowCredentials());
-
-
+    .AllowCredentials());
 
 
 app.Run();
