@@ -1,9 +1,13 @@
 //se configura el servicio y el comportamiento de la api
 
 using BombaAustra.API.Data;
+using BombaAustra.API.Helpers;
+using BombaAustra.Shared.Entities;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
+
 
 // Add services to the container.
 
@@ -16,7 +20,37 @@ builder.Services.AddSwaggerGen();
 //agregamos conexion BD(Inyeccion BBDD)
 builder.Services.AddDbContext<DataContext>(x => x.UseSqlServer("name=ConexionAWSSQL"));
 
+//Funciones de inicio de sesion y gestion de usuarios
+builder.Services.AddIdentity<Usuario, IdentityRole>(x =>
+{
+    x.User.RequireUniqueEmail = true;
+    x.Password.RequireDigit = false;
+    x.Password.RequiredUniqueChars = 0;
+    x.Password.RequireLowercase = false;
+    x.Password.RequireNonAlphanumeric = false;
+    x.Password.RequireUppercase = false;
+})
+    .AddEntityFrameworkStores<DataContext>()
+    .AddDefaultTokenProviders();
+
+builder.Services.AddScoped<IUserHelper, UserHelper>();
+builder.Services.AddTransient<SeedBD>();
+
+
 var app = builder.Build();
+SeedData(app);
+
+void SeedData(WebApplication app)
+{
+    IServiceScopeFactory? scopedFactory = app.Services.GetService<IServiceScopeFactory>();
+
+    using (IServiceScope? scope = scopedFactory!.CreateScope())
+    {
+        SeedBD? service = scope.ServiceProvider.GetService<SeedBD>();
+        service!.SeedAsync().Wait();
+    }
+
+}
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -26,6 +60,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.UseAuthentication();
 
 app.UseAuthorization();
 

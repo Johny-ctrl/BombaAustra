@@ -10,20 +10,29 @@
     <Compile Remove="NewFolder\**" />
     <Compile Remove="Pages\InicioSesion\**" />
     <Compile Remove="Pages\Inicio\**" />
+    <Compile Remove="Pages\Usuarios\**" />
+    <Compile Remove="Pages\Vehiculos\**" />
     <Content Remove="NewFolder\**" />
     <Content Remove="Pages\InicioSesion\**" />
     <Content Remove="Pages\Inicio\**" />
+    <Content Remove="Pages\Usuarios\**" />
+    <Content Remove="Pages\Vehiculos\**" />
     <EmbeddedResource Remove="NewFolder\**" />
     <EmbeddedResource Remove="Pages\InicioSesion\**" />
     <EmbeddedResource Remove="Pages\Inicio\**" />
+    <EmbeddedResource Remove="Pages\Usuarios\**" />
+    <EmbeddedResource Remove="Pages\Vehiculos\**" />
     <None Remove="NewFolder\**" />
     <None Remove="Pages\InicioSesion\**" />
     <None Remove="Pages\Inicio\**" />
+    <None Remove="Pages\Usuarios\**" />
+    <None Remove="Pages\Vehiculos\**" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="CurrieTechnologies.Razor.SweetAlert2" Version="5.5.0" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="7.0.11" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Authentication" Version="7.0.13" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="7.0.11" PrivateAssets="all" />
     <PackageReference Include="MySql.Data" Version="8.1.0" />
   </ItemGroup>

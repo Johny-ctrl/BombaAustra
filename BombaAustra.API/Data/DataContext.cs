@@ -1,17 +1,16 @@
 ﻿using BombaAustra.Shared.Entities;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 
 namespace BombaAustra.API.Data
 
 {
-    public class DataContext : DbContext
+    public class DataContext : IdentityDbContext<Usuario>
     {
         public DataContext(DbContextOptions<DataContext> options) : base(options)
         {
         }
-
-        public DbSet<Usuario> USUARIOS { get; set; }
 
         public DbSet<TipoUsuario> TIPO_USUARIOS { get; set; }
 
@@ -37,8 +36,6 @@ namespace BombaAustra.API.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
-
-            modelBuilder.Entity<Usuario>().HasIndex(x => x.ID_RUT).IsUnique();
 
             modelBuilder.Entity<TipoUsuario>().HasIndex(x => x.ID_TIPO_USUARIO).IsUnique();
 
