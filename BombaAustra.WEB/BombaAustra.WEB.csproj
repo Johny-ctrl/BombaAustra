@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.BlazorWebAssembly">
+﻿<Project Sdk="Microsoft.NET.Sdk.BlazorWebAssembly">
 
   <PropertyGroup>
     <TargetFramework>net7.0</TargetFramework>
@@ -9,15 +9,19 @@
   <ItemGroup>
     <Compile Remove="Pages\InicioSesion\**" />
     <Compile Remove="Pages\Inicio\**" />
+    <Compile Remove="Pages\NewFolder\**" />
     <Compile Remove="Pages\Usuarios\**" />
     <Content Remove="Pages\InicioSesion\**" />
     <Content Remove="Pages\Inicio\**" />
+    <Content Remove="Pages\NewFolder\**" />
     <Content Remove="Pages\Usuarios\**" />
     <EmbeddedResource Remove="Pages\InicioSesion\**" />
     <EmbeddedResource Remove="Pages\Inicio\**" />
+    <EmbeddedResource Remove="Pages\NewFolder\**" />
     <EmbeddedResource Remove="Pages\Usuarios\**" />
     <None Remove="Pages\InicioSesion\**" />
     <None Remove="Pages\Inicio\**" />
+    <None Remove="Pages\NewFolder\**" />
     <None Remove="Pages\Usuarios\**" />
   </ItemGroup>
 
