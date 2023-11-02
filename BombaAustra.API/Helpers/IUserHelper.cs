@@ -20,6 +20,23 @@ namespace BombaAustra.API.Helpers
 
         Task LogoutAsync();
 
+        Task<IdentityResult> ChangePasswordAsync(Usuario user, string currentPassword, string newPassword);
+
+        Task<IdentityResult> UpdateUserAsync(Usuario user);
+
+        Task<Usuario> GetUserAsync(Guid userId);
+
+        Task<string> GenerateEmailConfirmationTokenAsync(Usuario user);
+
+        Task<IdentityResult> ConfirmEmailAsync(Usuario user, string token);
+
+        Task<string> GeneratePasswordResetTokenAsync(Usuario user);
+
+        Task<IdentityResult> ResetPasswordAsync(Usuario user, string token, string password);
+
+
+
+
 
     }
 }

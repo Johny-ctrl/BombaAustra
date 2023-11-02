@@ -1,0 +1,114 @@
+﻿@page "/EditUser"
+@inject IRepository repository
+@inject SweetAlertService sweetAlertService
+@inject NavigationManager navigationManager
+@inject ILoginService loginService
+
+@if (user is null)
+{
+    <div class="spinner" />
+}
+else
+{
+    <EditForm Model="user" OnValidSubmit="SaveUserAsync">
+        <DataAnnotationsValidator />
+
+        <div class="card">
+            <div class="card-header">
+                <span>
+                    <i class="oi oi-person" /> Editar Usuario
+                    <a class="btn btn-sm btn-secondary float-end" href="/changePassword"><i class="oi oi-key" /> Cambiar Contraseña</a>
+                    <button class="btn btn-sm btn-primary float-end mx-2" type="submit"><i class="oi oi-check" /> Guardar Cambios</button>
+                </span>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-6">
+                        <div class="mb-3">
+                            <label>ID RUT:</label>
+                            <div>
+                                <InputText class="form-control" @bind-Value="@user.ID_RUT" />
+                                <ValidationMessage For="@(() => user.ID_RUT)" />
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label>DV RUT:</label>
+                            <div>
+                                <InputText class="form-control" @bind-Value="@user.DV_RUT" />
+                                <ValidationMessage For="@(() => user.DV_RUT)" />
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label>Nombre:</label>
+                            <div>
+                                <InputText class="form-control" @bind-Value="@user.NOMBRE" />
+                                <ValidationMessage For="@(() => user.NOMBRE)" />
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label>Apellido P:</label>
+                            <div>
+                                <InputText class="form-control" @bind-Value="@user.APELLIDO_P" />
+                                <ValidationMessage For="@(() => user.APELLIDO_P)" />
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label>Apellido M:</label>
+                            <div>
+                                <InputText class="form-control" @bind-Value="@user.APELLIDO_M" />
+                                <ValidationMessage For="@(() => user.APELLIDO_M)" />
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label>Teléfono:</label>
+                            <div>
+                                <InputText class="form-control" @bind-Value="@user.PhoneNumber" />
+                                <ValidationMessage For="@(() => user.PhoneNumber)" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </EditForm>
+}
+
+@code {
+    private Usuario? user;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadUserAsyc();
+
+    }
+
+    private async Task LoadUserAsyc()
+    {
+        var responseHTTP = await repository.Get<Usuario>($"/api/accounts");
+        if (responseHTTP.Error)
+        {
+            if (responseHTTP.HttpResponseMessage.StatusCode == System.Net.HttpStatusCode.NotFound)
+            {
+                navigationManager.NavigateTo("/");
+                return;
+            }
+            var messageError = await responseHTTP.GetErrorMessageAsync();
+            await sweetAlertService.FireAsync("Error", messageError, SweetAlertIcon.Error);
+            return;
+        }
+        user = responseHTTP.Response;
+    }
+
+    private async Task SaveUserAsync()
+    {
+        var responseHttp = await repository.Put<Usuario>("/api/accounts", user!);
+        if (responseHttp.Error)
+        {
+            var message = await responseHttp.GetErrorMessageAsync();
+            await sweetAlertService.FireAsync("Error", message, SweetAlertIcon.Error);
+            return;
+        }
+
+        navigationManager.NavigateTo("/Inicio");
+    }
+}

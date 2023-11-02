@@ -25,6 +25,7 @@ builder.Services.AddScoped<ILoginService, AuthenticationProviderJWT>(x => x.GetR
 
 //builder.Services.AddTransient<IRepository, Repository>(); se usa cuando se quiere implementar solo 1 vez
 //builder.Services.AddSingleton<>; SON MUY PELIGROSOS, consumen muchos recursos, se quedan dando vueltas los objetos que usan y pueden generar brechas de seguridad, inseguros por naturaleza
+
 await builder.Build().RunAsync(); //<--- ESTA MIERDA DE AQUI NO ME DEJO AVANZAR POR 3 DIAS! MALDICIOOOOOOOON >:(
 
 

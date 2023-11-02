@@ -49,7 +49,22 @@ namespace BombaAustra.API.Helpers
             var user = await _context.Users
                 .FirstOrDefaultAsync(x => x.Email == email);
             return user!;
+        }
 
+        public async Task<Usuario> GetUserAsync(Guid userId)
+        {
+            var user = await _context.Users
+                .FirstOrDefaultAsync(x => x.Id == userId.ToString());
+            return user!;
+        }
+        public async Task<IdentityResult> ChangePasswordAsync(Usuario user, string currentPassword, string newPassword)
+        {
+            return await _userManager.ChangePasswordAsync(user, currentPassword, newPassword);
+        }
+
+        public async Task<IdentityResult> UpdateUserAsync(Usuario user)
+        {
+            return await _userManager.UpdateAsync(user);
         }
 
         public async Task<bool> IsUserInRoleAsync(Usuario user, string roleName)
@@ -66,6 +81,27 @@ namespace BombaAustra.API.Helpers
         {
             await _signInManager.SignOutAsync();
         }
+
+        public async Task<string> GenerateEmailConfirmationTokenAsync(Usuario user)
+        {
+            return await _userManager.GenerateEmailConfirmationTokenAsync(user);
+        }
+
+        public async Task<IdentityResult> ConfirmEmailAsync(Usuario user, string token)
+        {
+            return await _userManager.ConfirmEmailAsync(user, token);
+        }
+
+        public async Task<string> GeneratePasswordResetTokenAsync(Usuario user)
+        {
+            return await _userManager.GeneratePasswordResetTokenAsync(user);
+        }
+
+        public async Task<IdentityResult> ResetPasswordAsync(Usuario user, string token, string password)
+        {
+            return await _userManager.ResetPasswordAsync(user, token, password);
+        }
+
 
     }
 }

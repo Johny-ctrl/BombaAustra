@@ -27,9 +27,7 @@ namespace BombaAustra.Shared.Entities
 
         public string APELLIDO_M { get; set; } = null!;
 
-        public UserType Usertype
-        
-        { get; set; }
+        public UserType Usertype { get; set; }
 
     }
 }

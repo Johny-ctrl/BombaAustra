@@ -26,6 +26,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Remove="Pages\Auth\EditUser.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Include="Pages\Vehiculos\AgregarEquipo.razor" />
     <None Include="Pages\Vehiculos\AgregarVehiculo.razor" />
     <None Include="Pages\Vehiculos\EquipoForm.razor" />
