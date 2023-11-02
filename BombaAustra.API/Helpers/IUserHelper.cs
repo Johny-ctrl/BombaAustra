@@ -1,4 +1,5 @@
-﻿using BombaAustra.Shared.Entities;
+﻿using BombaAustra.Shared.DTOs;
+using BombaAustra.Shared.Entities;
 using Microsoft.AspNetCore.Identity;
 
 namespace BombaAustra.API.Helpers
@@ -14,6 +15,11 @@ namespace BombaAustra.API.Helpers
         Task AddUserToRoleAsync(Usuario user, string roleName);
 
         Task<bool> IsUserInRoleAsync(Usuario user, string roleName);
+
+        Task<SignInResult> LoginAsync(LoginDTO model);
+
+        Task LogoutAsync();
+
 
     }
 }

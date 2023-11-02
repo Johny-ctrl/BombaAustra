@@ -2,11 +2,14 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using BombaAustra.API.Data;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 
 namespace BombaAustra.API.Controllers
 {
     [ApiController]
     [Route ("/api/Modelo")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class ModeloVehiculoController : ControllerBase
     {
         private readonly DataContext _context;

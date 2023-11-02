@@ -1,10 +1,11 @@
 using BombaAustra.WEB;
+using BombaAustra.WEB.Auth;
 using BombaAustra.WEB.Repositories;
 using CurrieTechnologies.Razor.SweetAlert2;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
-using Sales.WEB.Auth;
+using System.Diagnostics.CodeAnalysis;
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
 builder.RootComponents.Add<App>("#app");
@@ -15,15 +16,20 @@ builder.Services.AddSingleton(sp => new HttpClient { BaseAddress = new Uri("http
 //existen 3 formas de inyectar repositorio
 builder.Services.AddScoped<IRepository, Repository>();//Implementa el repositorio, esta es la mas comun, Se usa cuando se quiere crear una nueva instancia
 builder.Services.AddSweetAlert2(); //sweet Alert 2
+builder.Services.AddScoped<AuthenticationProviderJWT>();
+builder.Services.AddScoped<AuthenticationStateProvider, AuthenticationProviderJWT>(x => x.GetRequiredService<AuthenticationProviderJWT>());
+builder.Services.AddScoped<ILoginService, AuthenticationProviderJWT>(x => x.GetRequiredService<AuthenticationProviderJWT>());
+
 
 //builder.Services.AddTransient<IRepository, Repository>(); se usa cuando se quiere implementar solo 1 vez
 //builder.Services.AddSingleton<>; SON MUY PELIGROSOS, consumen muchos recursos, se quedan dando vueltas los objetos que usan y pueden generar brechas de seguridad, inseguros por naturaleza
 
-await builder.Build().RunAsync();
 
-//Autenticacion
+
 builder.Services.AddAuthorizationCore();
 builder.Services.AddScoped<AuthenticationStateProvider, AuthenticationProviderTest>();
+
+await builder.Build().RunAsync(); //<--- ESTA MIERDA DE AQUI NO ME DEJO AVANZAR POR 3 DIAS! MALDICIOOOOOOOON >:(
 
 
 

@@ -1,5 +1,7 @@
 ﻿using BombaAustra.API.Data;
 using BombaAustra.Shared.Entities;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -7,6 +9,7 @@ namespace BombaAustra.API.Controllers
 {
     [ApiController]
     [Route ("/api/gastos")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class GastosController : ControllerBase
     {
         private readonly DataContext _context;

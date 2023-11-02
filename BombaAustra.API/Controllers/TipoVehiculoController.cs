@@ -4,11 +4,14 @@ using Microsoft.EntityFrameworkCore;
 using BombaAustra.API.Data;
 using BombaAustra.API.Helpers;
 using BombaAustra.Shared.DTOs;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 
 namespace BombaAustra.API.Controllers
 {
     [ApiController]
     [Route("/api/TipoV")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class TipoVehiculoController : ControllerBase
     {
         private readonly DataContext _context;

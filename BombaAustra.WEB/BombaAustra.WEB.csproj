@@ -7,26 +7,30 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="NewFolder\**" />
     <Compile Remove="Pages\InicioSesion\**" />
     <Compile Remove="Pages\Inicio\**" />
     <Compile Remove="Pages\Usuarios\**" />
-    <Compile Remove="Pages\Vehiculos\**" />
-    <Content Remove="NewFolder\**" />
     <Content Remove="Pages\InicioSesion\**" />
     <Content Remove="Pages\Inicio\**" />
     <Content Remove="Pages\Usuarios\**" />
-    <Content Remove="Pages\Vehiculos\**" />
-    <EmbeddedResource Remove="NewFolder\**" />
     <EmbeddedResource Remove="Pages\InicioSesion\**" />
     <EmbeddedResource Remove="Pages\Inicio\**" />
     <EmbeddedResource Remove="Pages\Usuarios\**" />
-    <EmbeddedResource Remove="Pages\Vehiculos\**" />
-    <None Remove="NewFolder\**" />
     <None Remove="Pages\InicioSesion\**" />
     <None Remove="Pages\Inicio\**" />
     <None Remove="Pages\Usuarios\**" />
-    <None Remove="Pages\Vehiculos\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="Pages\Vehiculos\AgregarEquipo.razor" />
+    <None Include="Pages\Vehiculos\AgregarVehiculo.razor" />
+    <None Include="Pages\Vehiculos\EquipoForm.razor" />
+    <None Include="Pages\Vehiculos\InfoVehiculos.razor" />
+    <None Include="Pages\Vehiculos\ListaVehiculos.razor" />
+    <None Include="Pages\Vehiculos\ModificarEquipo.razor" />
+    <None Include="Pages\Vehiculos\ModificarVehiculo.razor" />
+    <None Include="Pages\Vehiculos\Reportes.razor" />
+    <None Include="Pages\Vehiculos\VehiculoForm.razor" />
   </ItemGroup>
 
   <ItemGroup>
@@ -35,6 +39,7 @@
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Authentication" Version="7.0.13" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="7.0.11" PrivateAssets="all" />
     <PackageReference Include="MySql.Data" Version="8.1.0" />
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="7.0.3" />
   </ItemGroup>
 
   <ItemGroup>

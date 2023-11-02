@@ -1,4 +1,4 @@
-﻿@page "/ini"
+﻿@page "/"
 @inject IRepository repository
 @inject NavigationManager Navigation
 
@@ -26,7 +26,15 @@
 @code {
     private void Iniciar()
     {
-        Navigation.NavigateTo("Inicio");
+        try
+        {
+            Navigation.NavigateTo("Inicio");
+        }
+        catch
+        {
+            
+        }
+
     }
 
 }

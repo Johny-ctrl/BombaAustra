@@ -1,5 +1,7 @@
 ﻿using BombaAustra.API.Data;
 using BombaAustra.Shared.Entities;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -8,6 +10,7 @@ namespace BombaAustra.API.Controllers
     //Tag de Controlador de api
     [ApiController]
     [Route("/api/TipoEquipo")] //<--Enrutador, las peticiones vendran de aqui, se puede poner cualquier nombre
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class TipoEquipoController : ControllerBase
     {
         private readonly DataContext _context;

@@ -172,14 +172,21 @@
             url2 = $"api/TipoV/totalPages?filter={Filter}";
         }
 
+        try
+        {
+            var EquipoResponse = await repository.Get<List<Equipo>>("api/Equipos");//Devuelve la lista de Equipo
+            Equipos = EquipoResponse.Response;
 
-        var EquipoResponse = await repository.Get<List<Equipo>>("api/Equipos");//Devuelve la lista de Equipo
-        Equipos = EquipoResponse.Response;
+            var vehiculoEResponse = await repository.Get<List<TipoVehiculo>>(url1);
+            var vehiculoEResponse2 = await repository.Get<int>(url2);
+            vehiculos = vehiculoEResponse.Response!;
+            totalPages = vehiculoEResponse2.Response!;
+        }
+        catch (Exception ex)
+        {
+            await sweetAlertService.FireAsync("Error", ex.Message, SweetAlertIcon.Error);
+        }
 
-        var vehiculoEResponse = await repository.Get<List<TipoVehiculo>>(url1);
-        var vehiculoEResponse2 = await repository.Get<int>(url2);
-        vehiculos = vehiculoEResponse.Response!;
-        totalPages = vehiculoEResponse2.Response!;
     }
 
     private async Task DeleteAsync(string SIGLA)
