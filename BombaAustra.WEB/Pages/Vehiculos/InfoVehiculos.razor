@@ -2,8 +2,9 @@
 @inject IRepository repository
 @inject NavigationManager navigate
 @inject SweetAlertService swwetAlertService
+@using iText.Layout.Element;
+@using iText.Layout;
 
-<h3>Informacion de @vehiculo!.SIGLA</h3>
 
 
 <table class="table table-striped">
@@ -31,20 +32,27 @@
                 @vehiculo!.ULTIMA_REVISION_TEC
             </td>
             <td>
-                @vehiculo!.ID_MODELO
+                @vehiculo!.Modelo
             </td>
         </tr>
     </tbody>
 </table>
 
 <a class="btn btn-warning" href="/ListVehi/edit/@vehiculo.SIGLA">Editar</a>
-
+<button class="btn btn-primary" @onclick="GeneratePdf">Generar PDF</button>
+@if (pdfBytes != null)
+{
+    <a href="data:application/pdf;base64,@pdfBase64" download="UserPDF.pdf">Descargar PDF</a>
+}
 
 @code {
 
     //Editar Vehiculos
     private TipoVehiculo? vehiculo;
     private List<TipoVehiculo>? vehiculos;
+
+    private byte[]? pdfBytes;
+    private string? pdfBase64;
 
 
     [Parameter]
@@ -77,4 +85,31 @@
         //vehiculos = vehiculo!.SIGLA!.ToList();
     }
 
+    private void GeneratePdf()
+    {
+        // Aquí debes obtener el usuario de la base de datos utilizando el ID
+        // usuario = ObtenerUsuarioDesdeBaseDeDatos(userId);
+
+        if (vehiculo != null)
+        {
+            using (var stream = new MemoryStream())
+            {
+                var pdf = new PdfDocument(new PdfWriter(stream));
+                var document = new Document(pdf);
+
+                // Aquí puedes agregar los datos específicos del usuario al PDF
+                document.Add(new Paragraph("Datos del vehiculo").SetFontSize(18));
+                document.Add(new Paragraph($"*Sigla del vehiculo: {vehiculo.SIGLA}"));
+                document.Add(new Paragraph($"*Patente: {vehiculo.PATENTE}"));
+                document.Add(new Paragraph($"*Modelo: {vehiculo.Modelo}"));
+                document.Add(new Paragraph($"*Marca: {vehiculo.MARCA}"));
+                document.Add(new Paragraph($"*Ultima revision Tecnica: {vehiculo.ULTIMA_REVISION_TEC}"));
+
+                document.Close();
+
+                pdfBytes = stream.ToArray();
+                pdfBase64 = Convert.ToBase64String(pdfBytes);
+            }
+        }
+    }
 }

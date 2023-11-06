@@ -27,7 +27,7 @@ builder.Services.AddEndpointsApiExplorer();
 
 builder.Services.AddSwaggerGen(c =>
 {
-    c.SwaggerDoc("v1", new OpenApiInfo { Title = "Sales API", Version = "v1" });
+    c.SwaggerDoc("v1", new OpenApiInfo { Title = "Api Bomberos", Version = "v1" });
     c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
     {
         Description = @"JWT Authorization header using the Bearer scheme. <br /> <br />
@@ -59,7 +59,7 @@ builder.Services.AddSwaggerGen(c =>
 
 
 //agregamos conexion BD(Inyeccion BBDD)
-builder.Services.AddDbContext<DataContext>(x => x.UseSqlServer("name=ConexionAWSSQL"));
+builder.Services.AddDbContext<DataContext>(x => x.UseSqlServer("name=ConexionSQL"));
 
 //Funciones de inicio de sesion y gestion de usuarios
 builder.Services.AddIdentity<Usuario, IdentityRole>(x =>

@@ -1,4 +1,6 @@
 ﻿using BombaAustra.API.Data;
+using BombaAustra.API.Helpers;
+using BombaAustra.Shared.DTOs;
 using BombaAustra.Shared.Entities;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
@@ -8,7 +10,7 @@ using Microsoft.EntityFrameworkCore;
 namespace BombaAustra.API.Controllers
 {
     [ApiController]
-    [Route ("/api/gastos")]
+    [Route("/api/gastos")]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class GastosController : ControllerBase
     {
@@ -19,18 +21,50 @@ namespace BombaAustra.API.Controllers
             _context = context;
         }
 
+
+        //Get de todo los datos
         [HttpGet]
-        public async Task<IActionResult> GetAsync() //<--Mejor es async , los async ocupan todos los procesadores del pc, lo hace mas eficiente
+        public async Task<IActionResult> GetAsync([FromQuery] PaginacionDTO paginacion) //<--Mejor es async , los async ocupan todos los procesadores del pc, lo hace mas eficiente
         {
-            return Ok(await _context.GASTOS.ToListAsync());
+            //Paginacion
+            var queryable = _context.GASTOS.AsQueryable();
+
+            //esto aplica el filtro
+            if (!string.IsNullOrWhiteSpace(paginacion.Filter))
+            {
+                queryable = queryable.Where(x => x.ID_GASTO.ToLower().Contains(paginacion.Filter.ToLower()));
+            }
+
+
+            return Ok(await queryable
+                .OrderBy(x => x.ID_GASTO)
+                .Paginate(paginacion)
+                .ToListAsync());
         }
 
+        [HttpGet("totalPages")]
+        public async Task<ActionResult> GetPages([FromQuery] PaginacionDTO paginacion)
+        {
+            //Paginacion!
+            var queryable = _context.GASTOS.AsQueryable();
+            //Esto aplica el filtro
+            if (!string.IsNullOrWhiteSpace(paginacion.Filter))
+            {
+                queryable = queryable.Where(x => x.ID_GASTO.ToLower().Contains(paginacion.Filter.ToLower()));
+            }
+
+            double count = await queryable.CountAsync();
+            double totalPages = Math.Ceiling(count / paginacion.RecordsNumber);
+            return Ok(totalPages);
+        }
+
+
         [HttpPost]
-        public async Task<ActionResult> PostAsync(Gastos gasto)
+        public async Task<ActionResult> PostAsync(Gastos gastos)
         {
             try
             {
-                _context.GASTOS.Add(gasto);
+                _context.GASTOS.Add(gastos);
                 await _context.SaveChangesAsync();
                 return Ok();
             }
@@ -38,7 +72,7 @@ namespace BombaAustra.API.Controllers
             {
                 if (dbUpdateException.InnerException!.Message.Contains("duplicate"))
                 {
-                    return BadRequest("Este gasto ya fue creado");
+                    return BadRequest("Este gasto ya existe");
                 }
 
                 return BadRequest(dbUpdateException.Message);
@@ -47,35 +81,38 @@ namespace BombaAustra.API.Controllers
             {
                 return BadRequest(ex.Message);
             }
+
+
         }
 
 
         //Obtener por ID
-        [HttpGet("{id}")] //<-- Se utiliza para obtener los datos de la BBDD
-        public async Task<IActionResult> GetAsync(string id) //<--Mejor es async , los async ocupan todos los procesadores del pc, lo hace mas eficiente
+        [HttpGet("{ID}")] //<-- Se utiliza para obtener los datos de la BBDD
+
+        public async Task<IActionResult> GetAsync(string ID) //<--Mejor es async , los async ocupan todos los procesadores del pc, lo hace mas eficiente
         {
-            var gasto = await _context.GASTOS.FirstOrDefaultAsync(x => x.ID_GASTO == id);
-            if (gasto == null)
+            var tipovehiculo = await _context.GASTOS.FirstOrDefaultAsync(x => x.ID_GASTO == ID);
+            if (tipovehiculo == null)
             {
                 return NotFound();
             }
-            return Ok(gasto);
+            return Ok(tipovehiculo);
         }
 
         [HttpPut]
-        public async Task<ActionResult> Put(Gastos gastos) //<--Mejor es async , los async ocupan todos los procesadores del pc, lo hace mas eficiente
+        public async Task<ActionResult> Put(Gastos gasto) //<--Mejor es async , los async ocupan todos los procesadores del pc, lo hace mas eficiente
         {
             try
             {
-                _context.Update(gastos);
+                _context.Update(gasto);
                 await _context.SaveChangesAsync();//<--Aqui se guardan los datos
-                return Ok(gastos);
+                return Ok(gasto);
             }
             catch (DbUpdateException dbUpdateException)
             {
                 if (dbUpdateException.InnerException!.Message.Contains("duplicate"))
                 {
-                    return BadRequest("Este gasto ya fue creado");
+                    return BadRequest("Este gasto ya esxiste");
                 }
 
                 return BadRequest(dbUpdateException.Message);
@@ -84,17 +121,18 @@ namespace BombaAustra.API.Controllers
             {
                 return BadRequest(ex.Message);
             }
+
         }
 
-        [HttpDelete("{id}")] //<-- Se utiliza para ELIMINAR los datos de la BBDD
-        public async Task<IActionResult> DeleteAsync(string id) //<--Mejor es async , los async ocupan todos los procesadores del pc, lo hace mas eficiente
+        [HttpDelete("{ID}")] //<-- Se utiliza para ELIMINAR los datos de la BBDD
+        public async Task<IActionResult> DeleteAsync(string ID) //<--Mejor es async , los async ocupan todos los procesadores del pc, lo hace mas eficiente
         {
-            var gastos = await _context.GASTOS.FirstOrDefaultAsync(x => x.ID_GASTO == id);
-            if (gastos == null)
+            var gasto = await _context.GASTOS.FirstOrDefaultAsync(x => x.ID_GASTO == ID);
+            if (gasto == null)
             {
                 return NotFound();
             }
-            _context.Remove(gastos);
+            _context.Remove(gasto);
             await _context.SaveChangesAsync();//<--Aqui se guardan los datos
             return NoContent();
         }

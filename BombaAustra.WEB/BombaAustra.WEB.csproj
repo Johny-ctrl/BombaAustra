@@ -10,26 +10,31 @@
     <Compile Remove="Pages\InicioSesion\**" />
     <Compile Remove="Pages\Inicio\**" />
     <Compile Remove="Pages\NewFolder\**" />
-    <Compile Remove="Pages\Usuarios\**" />
     <Content Remove="Pages\InicioSesion\**" />
     <Content Remove="Pages\Inicio\**" />
     <Content Remove="Pages\NewFolder\**" />
-    <Content Remove="Pages\Usuarios\**" />
     <EmbeddedResource Remove="Pages\InicioSesion\**" />
     <EmbeddedResource Remove="Pages\Inicio\**" />
     <EmbeddedResource Remove="Pages\NewFolder\**" />
-    <EmbeddedResource Remove="Pages\Usuarios\**" />
     <None Remove="Pages\InicioSesion\**" />
     <None Remove="Pages\Inicio\**" />
     <None Remove="Pages\NewFolder\**" />
-    <None Remove="Pages\Usuarios\**" />
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Remove="Auth\AuthenticationProviderTest.cs" />
     <Compile Remove="Pages\Auth\EditUser.cs" />
   </ItemGroup>
 
   <ItemGroup>
+    <Content Remove="Pages\Counter.razor" />
+    <Content Remove="Pages\FetchData.razor" />
+    <Content Remove="Pages\Usuarios\ConfUsers.razor" />
+    <Content Remove="Pages\Usuarios\UsuarioForm.razor" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="Pages\Usuarios\AgregarUsuario.razor" />
     <None Include="Pages\Vehiculos\AgregarEquipo.razor" />
     <None Include="Pages\Vehiculos\AgregarVehiculo.razor" />
     <None Include="Pages\Vehiculos\EquipoForm.razor" />
@@ -43,6 +48,8 @@
 
   <ItemGroup>
     <PackageReference Include="CurrieTechnologies.Razor.SweetAlert2" Version="5.5.0" />
+    <PackageReference Include="itext7" Version="8.0.2" />
+    <PackageReference Include="itext7.bouncy-castle-adapter" Version="8.0.2" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="7.0.11" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Authentication" Version="7.0.13" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="7.0.11" PrivateAssets="all" />

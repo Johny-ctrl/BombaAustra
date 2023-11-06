@@ -1,46 +1,40 @@
 ﻿@inject SweetAlertService sweetAlertService
-@using BombaAustra.Shared.Enums;
+
 
 <NavigationLock OnBeforeInternalNavigation="OnBeforeInternalNavigation" />
 
 <EditForm EditContext="editContext" OnValidSubmit="OnValidSubmit">
     <DataAnnotationsValidator />
     <div class="mb-3">
-        <label>Sigla:</label>
+        <label>ID Gasto:</label>
         <div>
-            <InputText class="form-control" @bind-Value="@Vehiculo.SIGLA" />
-            <ValidationMessage For="@(() => Vehiculo.SIGLA)" />
+            <InputText class="form-control" @bind-Value="@Gasto.ID_GASTO" />
+            <ValidationMessage For="@(() => Gasto.ID_GASTO)" />
         </div>
 
-        <label>Patente:</label>
+        <label>Cantidad de este año:</label>
         <div>
-            <InputText class="form-control" @bind-Value="@Vehiculo.PATENTE" />
-            <ValidationMessage For="@(() => Vehiculo.PATENTE)" />
+            <InputNumber class="form-control" @bind-Value="@Gasto.AÑO_ACTUAL" />
+            <ValidationMessage For="@(() => Gasto.AÑO_ACTUAL)" />
         </div>
 
-        <label>Marca:</label>
+        <label>Cantidad del año pasado:</label>
         <div>
-            <InputText class="form-control" @bind-Value="@Vehiculo.MARCA" />
-            <ValidationMessage For="@(() => Vehiculo.MARCA)" />
+            <InputNumber class="form-control" @bind-Value="@Gasto.AÑO_PASADO" />
+            <ValidationMessage For="@(() => Gasto.AÑO_PASADO)" />
         </div>
 
-        <label>Ultima Revision:</label>
+        <label>Costo Revision Tecnica:</label>
         <div>
-            <InputDate class="form-control" @bind-Value="@Vehiculo.ULTIMA_REVISION_TEC"/>
-            <ValidationMessage For="@(() => Vehiculo.ULTIMA_REVISION_TEC)" />
+            <InputNumber class="form-control" @bind-Value="@Gasto.COSTO_REVISION_TEC" />
+            <ValidationMessage For="@(() => Gasto.COSTO_REVISION_TEC)" />
         </div>
 
-        <label>Modelo:</label>
+        <label>Sigla del vehiculo:</label>
         <div>
-            <InputSelect class="form-control" @bind-Value="@Vehiculo.Modelo">
-                @foreach (Modelos modelo in Enum.GetValues(typeof(Modelos)))
-                {
-                    <option value="@modelo"> @modelo</option>
-                }
-            </InputSelect>
-            <ValidationMessage For="@(() => Vehiculo.Modelo)" />
+            <InputText class="form-control" @bind-Value="@Gasto.SIGLA" />
+            <ValidationMessage For="@(() => Gasto.SIGLA)" />
         </div>
-
     </div>
     <button class="btn btn-primary" type="submit">Guardar cambios</button>
     <button class="btn btn-success" @onclick="ReturnAction">Regresar</button>
@@ -52,7 +46,9 @@
 
     [Parameter]
     [EditorRequired]
-    public TipoVehiculo Vehiculo { get; set; } = null!;
+    public Gastos Gasto { get; set; } = null!;
+
+    public List<Gastos> gastos { get; set; } = null!;
 
     [Parameter]
     [EditorRequired]
@@ -66,7 +62,7 @@
 
     protected override void OnInitialized()
     {
-        editContext = new(Vehiculo);
+        editContext = new(Gasto);
     }
 
     private async Task OnBeforeInternalNavigation(LocationChangingContext context)
@@ -92,4 +88,5 @@
         }
         context.PreventNavigation();
     }
+
 }

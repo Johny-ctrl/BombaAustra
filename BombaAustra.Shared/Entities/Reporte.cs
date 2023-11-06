@@ -14,5 +14,6 @@ namespace BombaAustra.Shared.Entities
 
         public string DESCRIPCION { get; set; } = null!;
 
+
     }
 }

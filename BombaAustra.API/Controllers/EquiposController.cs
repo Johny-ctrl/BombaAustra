@@ -2,6 +2,8 @@
 using BombaAustra.API.Helpers;
 using BombaAustra.Shared.DTOs;
 using BombaAustra.Shared.Entities;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -9,6 +11,7 @@ namespace BombaAustra.API.Controllers
 {
     [ApiController]
     [Route("/api/Equipos")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class EquiposController : ControllerBase
     {
         private readonly DataContext _context;

@@ -12,8 +12,6 @@ namespace BombaAustra.API.Data
         {
         }
 
-        public DbSet<TipoUsuario> TIPO_USUARIOS { get; set; }
-
         public DbSet<TipoEquipo> TIPO_EQUIPO {  get; set; }
 
         public DbSet<Reporte> REPORTES { get; set; }
@@ -26,8 +24,6 @@ namespace BombaAustra.API.Data
 
         public DbSet<Compañia> COMPANIAS { get; set; }
 
-        public DbSet<ModeloVehiculo> MODELO_VEHICULO { get; set; }
-
         public DbSet<Gastos> GASTOS { get; set; }
 
         public DbSet<TipoVehiculo> TIPO_VEHICULO { get; set; }
@@ -37,7 +33,6 @@ namespace BombaAustra.API.Data
         {
             base.OnModelCreating(modelBuilder);
 
-            modelBuilder.Entity<TipoUsuario>().HasIndex(x => x.ID_TIPO_USUARIO).IsUnique();
 
             modelBuilder.Entity<TipoEquipo>().HasIndex(x => x.ID_TIPO_EQUIPO).IsUnique();
 
@@ -50,8 +45,6 @@ namespace BombaAustra.API.Data
             modelBuilder.Entity<Equipo>().HasIndex(x => x.ID_EQUIPO).IsUnique();
 
             modelBuilder.Entity<Compañia>().HasIndex(x => x.ID_COMPAÑIA).IsUnique();
-
-            modelBuilder.Entity<ModeloVehiculo>().HasIndex(x => x.ID_MODELO).IsUnique();
 
             modelBuilder.Entity<Gastos>().HasIndex(x => x.ID_GASTO).IsUnique();
 

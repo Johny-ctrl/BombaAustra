@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 
 namespace BombaAustra.Shared.Entities
 {
@@ -17,5 +14,9 @@ namespace BombaAustra.Shared.Entities
         public int AÑO_PASADO { get; set; }
 
         public int COSTO_REVISION_TEC { get; set; }
+
+        public string SIGLA { get; set; } = null!;
+
+
     }
 }

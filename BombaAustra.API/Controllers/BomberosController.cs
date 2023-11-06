@@ -21,12 +21,14 @@ namespace BombaAustra.API.Controllers// <--- Agrega esto
         private readonly IUserHelper _userHelper;
         private readonly IConfiguration _configuration;
         private readonly IMailHelper _mailHelper;
+        private readonly DataContext _context;
 
-        public AccountsController(IUserHelper userHelper, IConfiguration configuration, IMailHelper mailHelper)
+        public AccountsController(IUserHelper userHelper, IConfiguration configuration, IMailHelper mailHelper, DataContext context)
         {
             _userHelper = userHelper;
             _configuration = configuration;
             _mailHelper = mailHelper;
+            _context = context;
         }
 
         [HttpPost("CreateUser")]
@@ -275,6 +277,43 @@ namespace BombaAustra.API.Controllers// <--- Agrega esto
 
             return BadRequest(result.Errors.FirstOrDefault()!.Description);
         }
+
+        [HttpGet("all")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        public async Task<ActionResult> GetAll([FromQuery] PaginacionDTO pagination)
+        {
+            var queryable = _context.Users
+                .AsQueryable();
+
+            if (!string.IsNullOrWhiteSpace(pagination.Filter))
+            {
+                queryable = queryable.Where(x => x.NOMBRE.ToLower().Contains(pagination.Filter.ToLower()) ||
+                                                    x.APELLIDO_P.ToLower().Contains(pagination.Filter.ToLower()));
+            }
+
+            return Ok(await queryable
+                .OrderBy(x => x.NOMBRE)
+                .ThenBy(x => x.APELLIDO_P)
+                .Paginate(pagination)
+                .ToListAsync());
+        }
+
+        [HttpGet("totalPages")]
+        public async Task<ActionResult> GetPages([FromQuery] PaginacionDTO pagination)
+        {
+            var queryable = _context.Users.AsQueryable();
+
+            if (!string.IsNullOrWhiteSpace(pagination.Filter))
+            {
+                queryable = queryable.Where(x => x.NOMBRE.ToLower().Contains(pagination.Filter.ToLower()) ||
+                                                    x.APELLIDO_P.ToLower().Contains(pagination.Filter.ToLower()));
+            }
+
+            double count = await queryable.CountAsync();
+            double totalPages = Math.Ceiling(count / pagination.RecordsNumber);
+            return Ok(totalPages);
+        }
+
 
 
 

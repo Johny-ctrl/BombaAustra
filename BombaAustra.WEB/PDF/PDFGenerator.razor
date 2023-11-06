@@ -1,0 +1,56 @@
+﻿@page "/generate-pdf"
+@using iText.Layout.Element;
+@using iText.Layout;
+@inject IRepository repository
+
+<h3>Generar PDF desde la Base de Datos con iText 7</h3>
+
+<button class="btn btn-primary" @onclick="GeneratePdf">Generar PDF</button>
+
+@if (pdfBytes != null)
+{
+    <a href="data:application/pdf;base64,@pdfBase64" download="GeneratedPDF.pdf">Descargar PDF</a>
+}
+
+@code {
+    private byte[]? pdfBytes;
+    private string? pdfBase64;
+
+    private List<Usuario>? usuarios; // Asegúrate de llenar esta lista desde tu base de datos
+
+    protected async override Task OnInitializedAsync()
+    {
+        var responseHppt = await repository.Get<List<Usuario>>("api/accounts/all");
+        usuarios = responseHppt.Response!;
+    }
+
+
+    private void GeneratePdf()
+    {
+        using (var stream = new MemoryStream())
+        {
+            var pdf = new PdfDocument(new PdfWriter(stream));
+            var document = new Document(pdf);
+
+            // Encabezado
+            document.Add(new Paragraph("Lista de Usuarios").SetFontSize(18));
+
+            // Datos de la base de datos
+            if (usuarios != null)
+            {
+                foreach (var usuario in usuarios)
+                {
+                    document.Add(new Paragraph($"RUT: {usuario.ID_RUT}"));
+                    document.Add(new Paragraph($"Nombre: {usuario.NOMBRE}"));
+                    document.Add(new Paragraph($"Email: {usuario.Email}"));
+                document.Add(new AreaBreak());
+            }
+            }
+
+                document.Close();
+
+                pdfBytes = stream.ToArray();
+                pdfBase64 = Convert.ToBase64String(pdfBytes);
+            }
+    }
+}

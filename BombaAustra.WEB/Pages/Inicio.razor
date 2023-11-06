@@ -1,21 +1,28 @@
 ﻿@page "/Inicio"
+@using Microsoft.AspNetCore.Authorization;
 @inject IRepository repository
 @inject NavigationManager Navigation
 
 <header>
-    <h3>Bienvenido! *usuario*</h3>
+    <h3 class="text-center">Bienvenido!</h3>
 </header>
-
+<div class="text-center" style="padding:3px;">
+    <img src="https://www.shareicon.net/data/512x512/2015/09/23/106239_user_512x512.png" class="card-img" style="height:150px; width:150px;"/>
+</div>
 <body>
-    <div class="grid text-center">
-        <button @onclick="EstadoVehiculos" class="btn btn-success">Estado Vehiculo</button>
+    <div class="text-center">
+        <button @onclick="EstadoVehiculos" class="btn btn-success">Lista Vehiculo</button>
         <button @onclick="Reportes" class="btn btn-success">Reportes Existentes</button>
-        <button @onclick="AdminUsers" class="btn btn-success">Administrar usuarios</button>
-        <button @onclick="AddUsers" class="btn btn-success">Agregar Usuario</button>
-        <button @onclick="ConfUsers" class="btn btn-success">Configuracion de cuenta</button>
-        <button @onclick="InfoVehi" class="btn btn-success">Info Vehiculo</button>
-        <button class="btn btn-success">Vista Usuario</button>
-        <button class="btn btn-success">Perfil Costos</button>
+        <AuthorizeView Roles="AdministradorGeneral,AdministradorCompañia">
+            <button @onclick="AdminUsers" class="btn btn-success">Administrar usuarios</button>
+            <button @onclick="AddUsers" class="btn btn-success">Agregar Usuario</button>
+            <button class="btn btn-success">Vista Usuario</button>
+            <button @onclick="Gastos" class="btn btn-success">Perfil Costos</button>
+        </AuthorizeView>
+
+
+
+
     </div>
 
 </body>
@@ -24,32 +31,32 @@
 
     public void EstadoVehiculos()
     {
-        Navigation.NavigateTo("ListVehi");
+        Navigation.NavigateTo("/ListVehi");
     }
 
     public void Reportes()
     {
-        Navigation.NavigateTo("Reportes");
-    }
-
-    public void InfoVehi()
-    {
-        Navigation.NavigateTo("InfoVehi");
+        Navigation.NavigateTo("/Reportes");
     }
 
     public void AdminUsers()
     {
-        Navigation.NavigateTo("AdminUsers");
+        Navigation.NavigateTo("/AdminUsers");
     }
 
     public void AddUsers()
     {
-        Navigation.NavigateTo("/Usuarios/agregar");
+        Navigation.NavigateTo("/AgregarUsuario");
     }
 
-    public void ConfUsers()
+    public void Gastos()
     {
-        Navigation.NavigateTo("ConfUsers");
+        Navigation.NavigateTo("/Gastos");
+    }
+
+    public void PDF()
+    {
+        Navigation.NavigateTo("/generate-pdf");
     }
 
 }
