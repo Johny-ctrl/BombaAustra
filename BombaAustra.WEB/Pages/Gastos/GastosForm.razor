@@ -8,32 +8,26 @@
     <div class="mb-3">
         <label>ID Gasto:</label>
         <div>
-            <InputText class="form-control" @bind-Value="@Gasto.ID_GASTO" />
+            <InputNumber class="form-control" @bind-Value="@Gasto.ID_GASTO" />
             <ValidationMessage For="@(() => Gasto.ID_GASTO)" />
         </div>
 
         <label>Cantidad de este año:</label>
         <div>
-            <InputNumber class="form-control" @bind-Value="@Gasto.AÑO_ACTUAL" />
-            <ValidationMessage For="@(() => Gasto.AÑO_ACTUAL)" />
+            <InputText class="form-control" @bind-Value="@Gasto.SIGLA" />
+            <ValidationMessage For="@(() => Gasto.SIGLA)" />
         </div>
 
         <label>Cantidad del año pasado:</label>
         <div>
-            <InputNumber class="form-control" @bind-Value="@Gasto.AÑO_PASADO" />
-            <ValidationMessage For="@(() => Gasto.AÑO_PASADO)" />
+            <InputNumber class="form-control" @bind-Value="@Gasto.MONTO" />
+            <ValidationMessage For="@(() => Gasto.MONTO)" />
         </div>
 
         <label>Costo Revision Tecnica:</label>
         <div>
-            <InputNumber class="form-control" @bind-Value="@Gasto.COSTO_REVISION_TEC" />
-            <ValidationMessage For="@(() => Gasto.COSTO_REVISION_TEC)" />
-        </div>
-
-        <label>Sigla del vehiculo:</label>
-        <div>
-            <InputText class="form-control" @bind-Value="@Gasto.SIGLA" />
-            <ValidationMessage For="@(() => Gasto.SIGLA)" />
+            <InputTextArea class="form-control" @bind-Value="@Gasto.DESCRIPCION" />
+            <ValidationMessage For="@(() => Gasto.DESCRIPCION)" />
         </div>
     </div>
     <button class="btn btn-primary" type="submit">Guardar cambios</button>

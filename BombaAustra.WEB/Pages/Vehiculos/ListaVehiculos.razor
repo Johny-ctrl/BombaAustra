@@ -46,9 +46,8 @@
                     <thead>
                         <tr class="table-bordered">
                             <th>Id</th>
-                            <th>Tipo</th>
                             <th>Nombre</th>
-                            <th>Estado</th>
+                            <th>Tipo</th>
                             <th>Acciones</th>
                         </tr>
                     </thead>
@@ -60,19 +59,14 @@
                                     @equipo.ID_EQUIPO
                                 </td>
                                 <td>
-                                    @equipo.TIPO_EQUIPO
-                                </td>
-                                <td>
                                     @equipo.NOMBRE_EQUIPO
+
                                 </td>
                                 <td>
                                     @equipo.TIPO_EQUIPO
                                 </td>
                                 <td>
-                                    <a class="btn btn-warning" href="/ListVehi/edit/@equipo.ID_EQUIPO">Editar</a>
                                     <button class="btn btn-danger" @onclick=@(() => DeleteEAsync(equipo.ID_EQUIPO))>Eliminar</button>
-                                    <a class="btn btn-success" href="/ListVehi/Info/@equipo.ID_EQUIPO">Detalles</a>
-                            
                                 </td>
                             </tr>
                         }
@@ -151,7 +145,6 @@
 
 
     private List<Equipo>? Equipos { get; set; }
-    private List<TipoEquipo>? tipoEquipos  { get; set; }
     private List<TipoVehiculo>? vehiculos { get; set; }
     private int currentPage = 1;
     private int totalPages;

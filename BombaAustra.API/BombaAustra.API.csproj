@@ -14,7 +14,12 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Remove="Controllers\CompaniasController.cs" />
+    <Compile Remove="Controllers\EstadoEquiposController.cs" />
     <Compile Remove="Controllers\ModeloVehiculoController.cs" />
+    <Compile Remove="Controllers\NombreCompaniasController.cs" />
+    <Compile Remove="Controllers\ReportesController.cs" />
+    <Compile Remove="Controllers\TipoEquipoController.cs" />
     <Compile Remove="Controllers\TipoUsuariosController.cs" />
     <Compile Remove="Migrations\20231020163025_BomberoBD.cs" />
     <Compile Remove="Migrations\20231020163025_BomberoBD.Designer.cs" />
@@ -25,12 +30,11 @@
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="7.0.13" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="7.0.13" />
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="7.0.11" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="7.0.12" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="7.0.12">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="MySql.Data" Version="8.1.0" />
+    <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="7.0.0" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
   </ItemGroup>
 

@@ -10,23 +10,24 @@ using Microsoft.EntityFrameworkCore;
 namespace BombaAustra.API.Controllers
 {
     [ApiController]
-    [Route("/api/gastos")]
+    [Route("/api/gastosResumen")]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-    public class GastosController :ControllerBase
+    public class GastosResumenController : ControllerBase
     {
         private readonly DataContext _context;
 
-        public GastosController(DataContext context)
+        public GastosResumenController(DataContext context)
         {
             _context = context;
         }
+
 
         //Get de todo los datos
         [HttpGet]
         public async Task<IActionResult> GetAsync([FromQuery] PaginacionDTO paginacion) //<--Mejor es async , los async ocupan todos los procesadores del pc, lo hace mas eficiente
         {
             //Paginacion
-            var queryable = _context.GASTO.AsQueryable();
+            var queryable = _context.GASTO_RESUMEN.AsQueryable();
 
             //esto aplica el filtro
             if (!string.IsNullOrWhiteSpace(paginacion.Filter))
@@ -45,7 +46,7 @@ namespace BombaAustra.API.Controllers
         public async Task<ActionResult> GetPages([FromQuery] PaginacionDTO paginacion)
         {
             //Paginacion!
-            var queryable = _context.GASTO.AsQueryable();
+            var queryable = _context.GASTO_RESUMEN.AsQueryable();
             //Esto aplica el filtro
             if (!string.IsNullOrWhiteSpace(paginacion.Filter))
             {
@@ -59,11 +60,11 @@ namespace BombaAustra.API.Controllers
 
 
         [HttpPost]
-        public async Task<ActionResult> PostAsync(Gastos gastos)
+        public async Task<ActionResult> PostAsync(GastosResumen gastos)
         {
             try
             {
-                _context.GASTO.Add(gastos);
+                _context.GASTO_RESUMEN.Add(gastos);
                 await _context.SaveChangesAsync();
                 return Ok();
             }
@@ -90,16 +91,16 @@ namespace BombaAustra.API.Controllers
 
         public async Task<IActionResult> GetAsync(string ID) //<--Mejor es async , los async ocupan todos los procesadores del pc, lo hace mas eficiente
         {
-            var tipovehiculo = await _context.GASTO.FirstOrDefaultAsync(x => x.SIGLA == ID);
-            if (tipovehiculo == null)
+            var gastos = await _context.GASTO_RESUMEN.FirstOrDefaultAsync(x => x.SIGLA == ID);
+            if (gastos == null)
             {
                 return NotFound();
             }
-            return Ok(tipovehiculo);
+            return Ok(gastos);
         }
 
         [HttpPut]
-        public async Task<ActionResult> Put(Gastos gasto) //<--Mejor es async , los async ocupan todos los procesadores del pc, lo hace mas eficiente
+        public async Task<ActionResult> Put(GastosResumen gasto) //<--Mejor es async , los async ocupan todos los procesadores del pc, lo hace mas eficiente
         {
             try
             {
@@ -126,7 +127,7 @@ namespace BombaAustra.API.Controllers
         [HttpDelete("{ID}")] //<-- Se utiliza para ELIMINAR los datos de la BBDD
         public async Task<IActionResult> DeleteAsync(string ID) //<--Mejor es async , los async ocupan todos los procesadores del pc, lo hace mas eficiente
         {
-            var gasto = await _context.GASTO.FirstOrDefaultAsync(x => x.SIGLA == ID);
+            var gasto = await _context.GASTO_RESUMEN.FirstOrDefaultAsync(x => x.SIGLA == ID);
             if (gasto == null)
             {
                 return NotFound();

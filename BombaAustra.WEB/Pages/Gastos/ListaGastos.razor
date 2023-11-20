@@ -34,9 +34,9 @@
                     <thead>
                         <tr class="table-bordered">
                             <th>Id Gasto</th>
-                            <th>Costo revision tecnica</th>
-                            <th>Sigla del vehiculo</th>
-                            <th></th>
+                            <th>Sigla</th>
+                            <th>Monto</th>
+                            <th>Acciones</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -47,13 +47,13 @@
                                     @gasto.ID_GASTO
                                 </td>
                                 <td>
-                                    @gasto.COSTO_REVISION_TEC
+                                    @gasto.SIGLA
                                 </td>
                                 <td>
                                     @gasto.SIGLA
                                 </td>
                                 <td>
-                                    <button class="btn btn-danger" @onclick="(() => DeleteAsync(gasto.ID_GASTO))">Eliminar</button>
+                                    <button class="btn btn-danger" @onclick="(() => DeleteAsync(gasto.SIGLA))">Eliminar</button>
                                     <a class="btn btn-success">Detalles</a>
                                 </td>
                             </tr>

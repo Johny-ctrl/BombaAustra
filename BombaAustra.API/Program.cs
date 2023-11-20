@@ -59,7 +59,7 @@ builder.Services.AddSwaggerGen(c =>
 
 
 //agregamos conexion BD(Inyeccion BBDD)
-builder.Services.AddDbContext<DataContext>(x => x.UseSqlServer("name=ConexionSQL"));
+builder.Services.AddDbContext<DataContext>(x => x.UseMySql("name=mysqlconnection", new MySqlServerVersion(new Version(8, 0))));
 
 //Funciones de inicio de sesion y gestion de usuarios
 builder.Services.AddIdentity<Usuario, IdentityRole>(x =>
