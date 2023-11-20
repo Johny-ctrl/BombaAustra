@@ -26,12 +26,12 @@
         {
             message = await responseHttp.GetErrorMessageAsync();
             await sweetAlertService.FireAsync("Error", message, SweetAlertIcon.Error);
-            navigationManager.NavigateTo("/Login");
+            navigationManager.NavigateTo("/");
         }
         else
         {
             await sweetAlertService.FireAsync("Confirmación", "Gracias por confirmar su email, ahora puedes ingresar al sistema.", SweetAlertIcon.Info);
-            navigationManager.NavigateTo("/Login");
+            navigationManager.NavigateTo("/");
         }
     }
 }

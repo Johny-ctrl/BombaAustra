@@ -130,7 +130,6 @@
                         }
                     </tbody>
                 </table>
-                <button class="btn btn-outline-success" data-toggle="tooltip" title="Exportar" @onclick="(()=> export())">Generar PDF</button>
             </div>
         </div>
     </Body>
@@ -187,16 +186,18 @@
         {
             url1 = $"api/TipoV?page={page}";
             url2 = $"api/TipoV/totalPages";
+            url3 = $"api/Equipos?page={page}";
         }
         else
         {
             url1 = $"api/TipoV?page={page}&filter={Filter}";
             url2 = $"api/TipoV/totalPages?filter={Filter}";
+            url3 = $"api/Equipos?page={page}&filter={Filter}";
         }
 
         try
         {
-            var EquipoResponse = await repository.Get<List<Equipo>>("api/Equipos");//Devuelve la lista de Equipo
+            var EquipoResponse = await repository.Get<List<Equipo>>(url3);//Devuelve la lista de Equipo
             Equipos = EquipoResponse.Response;
 
             var vehiculoEResponse = await repository.Get<List<TipoVehiculo>>(url1);

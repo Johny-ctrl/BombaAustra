@@ -39,7 +39,7 @@
 </table>
 
 <a class="btn btn-warning" href="/ListVehi/edit/@vehiculo.SIGLA">Editar</a>
-<button class="btn btn-primary" @onclick="GeneratePdf">Generar PDF</button>
+<button class="btn btn-outline-success" @onclick="GeneratePdf">Generar PDF</button>
 @if (pdfBytes != null)
 {
     <a href="data:application/pdf;base64,@pdfBase64" download="UserPDF.pdf">Descargar PDF</a>
