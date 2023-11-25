@@ -5,25 +5,29 @@
 
 <h3>Lista de Gastos </h3>
 
-<div class="text-center" style="display: flex; flex-wrap:wrap; align-items: center;">
-    <div>
-        <a class="btn btn-primary mb-3" href="/Gastos/gastoAdd">Agregar Gasto</a>
-
+<div class="card">
+    <div class="card-header">
+        <i class="oi oi-calculator"></i> Opciones
+        <a class="btn btn-sm btn-primary float-end" href="/Gastos/gastoAdd">Agregar Gasto</a>
     </div>
-    <div class="mx-2">
-        <input style="width: 400px;" type="text" class="form-control" id="titulo" placeholder="Busqueda de gasto especifico..." @bind-value="Filter" />
-    </div>
-    <div>
-        <button type="button" class="btn btn-outline-primary" @onclick="ApplyFilterAsync">Filtrar</button>
-        <button type="button" class="btn btn-outline-danger" @onclick="CleanFilterAsync">Limpiar</button>
-    </div>
-</div>
+    <div class="card-body">
+        <div class="mb-2" style="display: flex; flex-wrap:wrap; align-items: center;">
+            <div class="text-center" style="display: flex; flex-wrap:wrap;">
+                <div>
+                    <input style="width: 400px;" type="text" class="form-control" id="titulo" placeholder="Busca por sigla" @bind-value="Filter" />
+                </div>
+                <div class="mx-1">
+                    <button type="button" class="btn btn-outline-primary" @onclick="ApplyFilterAsync"><i class="oi oi-layers" /> Filtrar</button>
+                    <button type="button" class="btn btn-outline-danger" @onclick="CleanFilterAsync"><i class="oi oi-ban" /> Limpiar</button>
+                </div>
+            </div>
 
+        </div>
+        <Paginacion CurrentPage="currentPage"
+                    TotalPages="totalPages"
+                    SelectedPage="SelectedPageAsync" />
+    </div>
 
-<div>
-<Paginacion CurrentPage="currentPage"
-            TotalPages="totalPages"
-            SelectedPage="SelectedPageAsync" />
 </div>
 
 <GenericList Mylist="Gasto">
@@ -36,6 +40,7 @@
                             <th>Id Gasto</th>
                             <th>Sigla</th>
                             <th>Monto</th>
+                            <th>Fecha de creacion</th>
                             <th>Acciones</th>
                         </tr>
                     </thead>

@@ -31,7 +31,8 @@ namespace BombaAustra.API.Controllers
             //esto aplica el filtro
             if (!string.IsNullOrWhiteSpace(paginacion.Filter))
             {
-                queryable = queryable.Where(x => x.SIGLA.ToLower().Contains(paginacion.Filter.ToLower()));
+                queryable = queryable.Where(x => x.SIGLA.ToLower().Contains(paginacion.Filter.ToLower()) ||
+                                          x.ID_GASTO.ToString().Contains(paginacion.Filter));
             }
 
 
@@ -49,7 +50,8 @@ namespace BombaAustra.API.Controllers
             //Esto aplica el filtro
             if (!string.IsNullOrWhiteSpace(paginacion.Filter))
             {
-                queryable = queryable.Where(x => x.SIGLA.ToLower().Contains(paginacion.Filter.ToLower()));
+                queryable = queryable.Where(x => x.SIGLA.ToLower().Contains(paginacion.Filter.ToLower()) ||
+                                          x.ID_GASTO.ToString().Contains(paginacion.Filter));
             }
 
             double count = await queryable.CountAsync();

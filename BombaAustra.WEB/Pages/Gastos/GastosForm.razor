@@ -12,6 +12,7 @@
             @if (vehiculos != null && vehiculos.Any())
             {
                 <InputSelect class="form-control" @bind-Value="@Gasto.SIGLA">
+                    <option>Seleccionar</option>
                     @foreach (var tipoVehiculo in vehiculos)
                     {
                         <option value="@tipoVehiculo.SIGLA"> @tipoVehiculo.SIGLA</option>
@@ -22,7 +23,7 @@
             {
                 <p>No hay tipos de vehículos disponibles.</p>
             }
-            <ValidationMessage For="@(() => Gasto.SIGLA)" />
+            <ValidationMessage For="@(() => Gasto.SIGLA)"/>
         </div>
 
         <label>Monto utilizado:</label>

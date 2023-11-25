@@ -1,4 +1,6 @@
 ﻿@page "/ListVehi/AddVehi"
+@using BombaAustra.Shared.Enums;
+@using System.ComponentModel.DataAnnotations;
 @inject NavigationManager navigation
 @inject SweetAlertService sweetAlertService
 @inject IRepository repositorio
@@ -9,6 +11,7 @@
 @code {
     private TipoVehiculo vehiculo = new();
     private VehiculoForm? vehiculoForm;
+
 
     private async Task Create()
     {
@@ -23,6 +26,7 @@
         navigation.NavigateTo("/ListVehi");
 
     }
+
 
     private void Return()
     {
