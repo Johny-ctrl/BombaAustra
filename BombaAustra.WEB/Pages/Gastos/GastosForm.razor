@@ -1,36 +1,43 @@
 ﻿@inject SweetAlertService sweetAlertService
-
+@inject IRepository repository
 
 <NavigationLock OnBeforeInternalNavigation="OnBeforeInternalNavigation" />
 
-<EditForm EditContext="editContext" OnValidSubmit="OnValidSubmit">
+<EditForm EditContext="editContext" OnValidSubmit="OnValidSubmitHandler">
     <DataAnnotationsValidator />
     <div class="mb-3">
-        <label>ID Gasto:</label>
-        <div>
-            <InputNumber class="form-control" @bind-Value="@Gasto.ID_GASTO" />
-            <ValidationMessage For="@(() => Gasto.ID_GASTO)" />
-        </div>
 
-        <label>Cantidad de este año:</label>
+        <label>Sigla del vehiculo:</label>
         <div>
-            <InputText class="form-control" @bind-Value="@Gasto.SIGLA" />
+            @if (vehiculos != null && vehiculos.Any())
+            {
+                <InputSelect class="form-control" @bind-Value="@Gasto.SIGLA">
+                    @foreach (var tipoVehiculo in vehiculos)
+                    {
+                        <option value="@tipoVehiculo.SIGLA"> @tipoVehiculo.SIGLA</option>
+                    }
+                </InputSelect>
+            }
+            else
+            {
+                <p>No hay tipos de vehículos disponibles.</p>
+            }
             <ValidationMessage For="@(() => Gasto.SIGLA)" />
         </div>
 
-        <label>Cantidad del año pasado:</label>
+        <label>Monto utilizado:</label>
         <div>
             <InputNumber class="form-control" @bind-Value="@Gasto.MONTO" />
             <ValidationMessage For="@(() => Gasto.MONTO)" />
         </div>
 
-        <label>Costo Revision Tecnica:</label>
+        <label>Escriba aqui que fue lo que se hizo</label>
         <div>
             <InputTextArea class="form-control" @bind-Value="@Gasto.DESCRIPCION" />
             <ValidationMessage For="@(() => Gasto.DESCRIPCION)" />
         </div>
     </div>
-    <button class="btn btn-primary" type="submit">Guardar cambios</button>
+    <button class="btn btn-primary" type="submit">Agregar</button>
     <button class="btn btn-success" @onclick="ReturnAction">Regresar</button>
 </EditForm>
 
@@ -42,7 +49,10 @@
     [EditorRequired]
     public Gastos Gasto { get; set; } = null!;
 
+    private List<TipoVehiculo>? vehiculos { get; set; } = new List<TipoVehiculo>();
+
     public List<Gastos> gastos { get; set; } = null!;
+
 
     [Parameter]
     [EditorRequired]
@@ -54,9 +64,10 @@
 
     public Boolean formPostedSucces { get; set; }
 
-    protected override void OnInitialized()
+    protected override async Task OnInitializedAsync()
     {
-        editContext = new(Gasto);
+        editContext = new EditContext(Gasto);
+        await Load();
     }
 
     private async Task OnBeforeInternalNavigation(LocationChangingContext context)
@@ -82,5 +93,38 @@
         }
         context.PreventNavigation();
     }
+
+    private async Task Load()
+    {
+        try
+        {
+            var responseHttp = await repository.Get<List<TipoVehiculo>>("/api/TipoV");
+            vehiculos = responseHttp.Response ?? new List<TipoVehiculo>();
+
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error al cargar tipos de vehículo: {ex.Message}");
+            // Puedes manejar el error según tus necesidades
+            // Por ejemplo, mostrar un mensaje de error al usuario
+            // y/o loggear el error para su posterior análisis
+        }
+
+
+    }
+
+        private async Task OnValidSubmitHandler()
+    {
+        // Asigna la fecha actual
+        Gasto.FechaCreacion = DateTime.Now;
+
+        // Realiza otras operaciones necesarias, como guardar en la base de datos
+
+        // Dispara el evento de éxito o realiza la lógica deseada
+        await OnValidSubmit.InvokeAsync();
+    }
+
+
+
 
 }

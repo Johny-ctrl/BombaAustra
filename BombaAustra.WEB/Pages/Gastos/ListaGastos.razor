@@ -50,7 +50,10 @@
                                     @gasto.SIGLA
                                 </td>
                                 <td>
-                                    @gasto.SIGLA
+                                    $@gasto.MONTO
+                                </td>
+                                <td>
+                                    @gasto.FechaCreacion.ToString("dd/MM/yyyy")
                                 </td>
                                 <td>
                                     <button class="btn btn-danger" @onclick="(() => DeleteAsync(gasto.SIGLA))">Eliminar</button>
@@ -163,6 +166,9 @@
             }
         }
         await LoadAsync();
+
+
+
 
     }
 

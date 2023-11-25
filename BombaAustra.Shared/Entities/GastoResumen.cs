@@ -17,6 +17,8 @@ namespace BombaAustra.Shared.Entities
 
         public int COSTO_REVISION_TEC { get; set; }
 
+        public int ID_GASTO { get; set; } 
+
         public string SIGLA { get; set; } = null!;
     }
 }
