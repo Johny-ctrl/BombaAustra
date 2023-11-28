@@ -1,8 +1,8 @@
 ﻿
 <AuthorizeView>
     <Authorized>
-        Hola,<a href="EditUser" class="nav-link btn btn-link">@context.User.Identity!.Name</a>
-        <a href="logout" class="nav-link btn btn-link">Cerrar Sesión</a>
+        <h6 style="color: white; margin-top: 10px;">Bienvenido!</h6><a href="EditUser" class="nav-link btn btn-link" style="color: white;">@context.User.Identity!.Name</a>
+        <a href="logout" class="nav-link btn btn-link" style="color: white;">Cerrar Sesión</a>
     </Authorized>
     <NotAuthorized>
         <a href="Register" class="nav-link btn btn-link">Registro</a>
