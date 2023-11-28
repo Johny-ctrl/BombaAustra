@@ -1,9 +1,16 @@
 ﻿
-
-
 .boton {
     background-color: rgba(0, 0, 139, 0.7);
     border: 1px solid #ffdb58;
     width: 100px;
     height: 100px;
+}
+
+
+.contenedor{
+
+}
+
+.contenedor button{
+    background-color: rgba(0, 0, 139, 0.7);
 }
