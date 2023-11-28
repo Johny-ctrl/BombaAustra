@@ -315,6 +315,18 @@ namespace BombaAustra.API.Controllers// <--- Agrega esto
         }
 
 
+        [HttpDelete("{correo}")] //<-- Se utiliza para ELIMINAR los datos de la BBDD
+        public async Task<IActionResult> DeleteAsync(string correo) //<--Mejor es async , los async ocupan todos los procesadores del pc, lo hace mas eficiente
+        {
+            var user = await _context.Users.FirstOrDefaultAsync(x => x.Email == correo);
+            if (user == null)
+            {
+                return NotFound();
+            }
+            _context.Remove(user);
+            await _context.SaveChangesAsync();//<--Aqui se guardan los datos
+            return NoContent();
+        }
 
 
 

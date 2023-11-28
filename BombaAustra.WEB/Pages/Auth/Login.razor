@@ -4,7 +4,7 @@
 @inject NavigationManager navigationManager
 @inject ILoginService loginService
 
-<div class="row">
+<div class="row all">
     <div class="col-md-4  offset-md-4">
 
         <EditForm Model="loginDTO" OnValidSubmit="LoginAsync">
@@ -14,7 +14,6 @@
                 <div class="card-header justify-content-center">
                     <span>
                         <i class="oi oi-account-login" /> Iniciar Sesión
-                        <button class="btn btn-sm btn-primary float-end" type="submit"><i class="oi oi-check" /> Iniciar Sesión</button>
                     </span>
                 </div>
                 <div class="card-body">
@@ -32,6 +31,11 @@
                             <ValidationMessage For="@(() => loginDTO.Password)" />
                         </div>
                     </div>
+                </div>
+                <div class="card-header justify-content-center">
+                    <span>
+                        <button class="btn btn-sm btn-primary" type="submit"><i class="oi oi-check" /> Iniciar Sesión</button>
+                    </span>
                 </div>
                 <div class="card-footer">
                     <a class="bbtn btn-link" href="/ResendToken">Reenviar correro de activación de cuenta</a>

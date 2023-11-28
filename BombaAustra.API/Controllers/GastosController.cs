@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System;
 
 namespace BombaAustra.API.Controllers
 {
@@ -32,7 +33,7 @@ namespace BombaAustra.API.Controllers
             if (!string.IsNullOrWhiteSpace(paginacion.Filter))
             {
                 queryable = queryable.Where(x => x.SIGLA.ToLower().Contains(paginacion.Filter.ToLower()) ||
-                                          x.ID_GASTO.ToString().Contains(paginacion.Filter));
+                                          x.DESCRIPCION.ToLower().Contains(paginacion.Filter));
             }
 
 
@@ -51,7 +52,7 @@ namespace BombaAustra.API.Controllers
             if (!string.IsNullOrWhiteSpace(paginacion.Filter))
             {
                 queryable = queryable.Where(x => x.SIGLA.ToLower().Contains(paginacion.Filter.ToLower()) ||
-                                          x.ID_GASTO.ToString().Contains(paginacion.Filter));
+                                          x.DESCRIPCION.ToLower().Contains(paginacion.Filter));
             }
 
             double count = await queryable.CountAsync();
@@ -88,16 +89,16 @@ namespace BombaAustra.API.Controllers
 
 
         //Obtener por ID
-        [HttpGet("{ID}")] //<-- Se utiliza para obtener los datos de la BBDD
+        [HttpGet("{id}")] //<-- Se utiliza para obtener los datos de la BBDD
 
-        public async Task<IActionResult> GetAsync(string ID) //<--Mejor es async , los async ocupan todos los procesadores del pc, lo hace mas eficiente
+        public async Task<IActionResult> GetAsync(string id) //<--Mejor es async , los async ocupan todos los procesadores del pc, lo hace mas eficiente
         {
-            var tipovehiculo = await _context.GASTO.FirstOrDefaultAsync(x => x.SIGLA == ID);
-            if (tipovehiculo == null)
+            var gasto = await _context.GASTO.FirstOrDefaultAsync(x => x.SIGLA == id);
+            if (gasto == null)
             {
                 return NotFound();
             }
-            return Ok(tipovehiculo);
+            return Ok(gasto);
         }
 
         [HttpPut]
@@ -126,9 +127,9 @@ namespace BombaAustra.API.Controllers
         }
 
         [HttpDelete("{ID}")] //<-- Se utiliza para ELIMINAR los datos de la BBDD
-        public async Task<IActionResult> DeleteAsync(string ID) //<--Mejor es async , los async ocupan todos los procesadores del pc, lo hace mas eficiente
+        public async Task<IActionResult> DeleteAsync(int ID) //<--Mejor es async , los async ocupan todos los procesadores del pc, lo hace mas eficiente
         {
-            var gasto = await _context.GASTO.FirstOrDefaultAsync(x => x.SIGLA == ID);
+            var gasto = await _context.GASTO.FirstOrDefaultAsync(x => x.ID_GASTO == ID);
             if (gasto == null)
             {
                 return NotFound();

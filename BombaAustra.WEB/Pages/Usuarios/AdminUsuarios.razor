@@ -6,8 +6,10 @@
 
 @if (Users is null)
 {
-    <div class="text-center">
-        <img src="https://tamilnaducouncil.ac.in/wp-content/uploads/2018/10/loading-gif.gif">
+    <div class="text-center" style="  position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);">
+        <div class="spinner-border text-success" role="status" style="height:200px; width:200px;">
+            <span class="visually-hidden">Loading...</span>
+        </div>
     </div>
 }
 else
@@ -46,6 +48,7 @@ else
                                 <th>Correo</th>
                                 <th>Confirmado</th>
                                 <th>Tipo Usuario</th>
+                                <th>Accion</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -59,6 +62,7 @@ else
                                     <td>@user.Email</td>
                                     <td>@user.EmailConfirmed</td>
                                     <td>@user.Usertype</td>
+                                    <td><button class="btn btn-danger" @onclick=@(() => DeleteAsync(user.Email))>Eliminar</button></td>
                                 </tr>
                             }
                         </tbody>
@@ -136,5 +140,37 @@ else
     {
         Filter = string.Empty;
         await LoadAsync();
+    }
+
+    private async Task DeleteAsync(string correo)
+    {
+        var result = await sweetAlertService.FireAsync(new SweetAlertOptions
+            {
+                Title = "Atencion",
+                Text = "¿Esta seguro que decea borrar este usuario?",
+                Icon = SweetAlertIcon.Warning,
+                ShowCancelButton = true,
+                CancelButtonText = "No",
+                ConfirmButtonText = "SI"
+            });
+        var confirm = string.IsNullOrEmpty(result.Value);
+        if (confirm)
+        {
+            return;
+        }
+
+        var responseHtpp = await repository.Delete($"/api/accounts/{correo}");
+        if (responseHtpp.Error)
+        {
+            if (responseHtpp.HttpResponseMessage.StatusCode != HttpStatusCode.NotFound)
+            {
+                var message = await responseHtpp.GetErrorMessageAsync();
+                await sweetAlertService.FireAsync("Error", message, SweetAlertIcon.Error);
+                return;
+
+            }
+        }
+        await LoadAsync();
+
     }
 }
