@@ -69,6 +69,9 @@
                     <label>Tipo de usuario:</label>
                     <div>
                         <InputSelect class="form-control" @bind-Value="@userDTO.Usertype">
+
+                            <option>Seleccionar</option>
+
                             @foreach (UserType type in Enum.GetValues(typeof(UserType)))
                             {
                                 <option value="@type"> @type</option>

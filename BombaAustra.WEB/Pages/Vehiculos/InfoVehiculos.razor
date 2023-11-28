@@ -3,6 +3,7 @@
 @inject NavigationManager navigate
 @inject SweetAlertService swwetAlertService
 @using Microsoft.Extensions.Primitives;
+@using Newtonsoft.Json;
 @using iText.Kernel.Colors;
 @using iText.Kernel.Pdf;
 @using iText.Layout;
@@ -12,52 +13,73 @@
 @using iText.IO.Image;
 
 
+<h1 class="text-center">Informacion del vehiculo</h1>
 
 
-<table class="table table-striped">
-    <thead>
-        <tr class="table-bordered">
-            <th>Sigla</th>
-            <th>Patente</th>
-            <th>Marca</th>
-            <th>Revision tecnica</th>
-            <th>Id_Modelo</th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr>
-            <td>
-                @vehiculo?.SIGLA
-            </td>
-            <td>
-                @vehiculo?.PATENTE
-            </td>
-            <td>
-                @vehiculo?.MARCA
-            </td>
-            <td>
-                @vehiculo?.ULTIMA_REVISION_TEC
-            </td>
-            <td>
-                @vehiculo?.Modelo
-            </td>
-        </tr>
-    </tbody>
-</table>
 <div class="card">
-    <div class="card-body">
-        <table class="table table-striped">
-            <thead>
-                <tr class="table-bordered">
-                    <th>Monto</th>
-                    <th>Descripcion</th>
-                    <th>Fecha de creacion</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var gasto in Gasto!)
-                {
+    <div class="card-header">
+        <i class="oi oi-info"></i> Informacion
+    </div>
+     <div class="card-body">
+        <div class="mb-2" style="display: flex; flex-wrap:wrap;">
+            <table class="table table-striped">
+                <thead>
+                    <tr class="table-bordered">
+                        <th>Sigla</th>
+                        <th>Patente</th>
+                        <th>Marca</th>
+                        <th>Revision tecnica</th>
+                        <th>Id_Modelo</th>
+                    </tr>
+                </thead>
+                <tbody>
                     <tr>
+                        <td>
+                            @vehiculo?.SIGLA
+                        </td>
+                        <td>
+                            @vehiculo?.PATENTE
+                        </td>
+                        <td>
+                            @vehiculo?.MARCA
+                        </td>
+                        <td>
+                            @vehiculo?.ULTIMA_REVISION_TEC
+                        </td>
+                        <td>
+                            @vehiculo?.Modelo
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<br/>
+
+    <div class="card">
+        <div class="card-header">
+            <i class="oi oi-dollar"></i> Gastos
+        </div>
+        <div class="card-body">
+            <table class="table table-striped">
+                <thead>
+                    <tr class="table-bordered">
+                        <th>Monto</th>
+                        <th>Descripcion</th>
+                        <th>Fecha de creacion</th>
+                    </tr>
+                </thead>
+                <tbody>
+                @foreach (var gasto in Gasto!)
+                    {
+                    <tr>
+                        <td>
+                            @gasto.ID_GASTO
+                        </td>
+                        <td>
+                            @gasto.SIGLA
+                        </td>
                         <td>
                             @gasto.MONTO
                         </td>
@@ -67,12 +89,12 @@
                         <td>
                             @gasto.FechaCreacion.ToString("dd/MM/yyyy")
                         </td>
-                    </tr>
-                }
-            </tbody>
-        </table>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
     </div>
-</div>
 
 <a class="btn btn-warning" href="/ListVehi/edit/@vehiculo?.SIGLA">Editar</a>
 <button class="btn btn-outline-success" @onclick="GeneratePdf">Generar PDF</button>
@@ -86,7 +108,10 @@
     //Editar Vehiculos
     private TipoVehiculo? vehiculo;
     private List<TipoVehiculo>? vehiculos;
-    private List<Gastos>? Gasto { get; set; } = new List<Gastos>();
+    private List<Gastos>? Gasto { get; set; }
+    private Gastos? gasto;
+
+
 
     private byte[]? pdfBytes;
     private string? pdfBase64;
@@ -94,6 +119,14 @@
 
     [Parameter]
     public string id { get; set; } = null!;
+
+    [Parameter]
+    [SupplyParameterFromQuery]
+    public string Page { get; set; } = "";
+
+    [Parameter]
+    [SupplyParameterFromQuery]
+    public string Filter { get; set; } = "";
 
 
 
@@ -121,6 +154,10 @@
         }
         vehiculo = responseVHttp.Response;
         //vehiculos = vehiculo!.SIGLA!.ToList();
+
+        var responseHttp = await repository.Get<List<Gastos>>($"/api/gastos/{id}");
+        Gasto = responseHttp.Response;
+
 
     }
 
@@ -203,13 +240,13 @@
             }
         }
     }
-  
+
     private async Task Load()
     {
         try
         {
-            var responseHttp = await repository.Get<List<Gastos>>("/api/gastos");
-            Gasto = responseHttp.Response ?? new List<Gastos>();
+            var responseHttp = await repository.Get<List<Gastos>>($"/api/gastos/{id}");
+            Gasto = responseHttp.Response;
         }
         catch (Exception ex)
         {

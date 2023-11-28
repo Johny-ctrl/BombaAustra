@@ -6,15 +6,17 @@
 @using iText.Layout.Element;
 @using iText.Layout;
 
-<h3 class="text-center">ListaVehiculos</h3>
+<h3 class="text-center">Lista de vehiculos y equipos</h3>
 
-
+<div class="text-center">
+    <img src="/images/Logo_camion.png" style="height:90px; width:90px;" />
+</div>
 
 <div class="card">
     <div class="card-header">
         <i class="oi oi-calculator"></i> Opciones
-        <a class="btn btn-sm btn-primary float-end" href="/ListVehi/AddVehi">Nuevo Vehiculo</a>
-        <a class="btn btn-sm btn-primary float-end" href="/ListVehi/AgregarEqui">Nuevo Equipo</a>
+        <a class="btn btn-sm btn-primary float-end" href="/ListVehi/AddVehi"><i class="oi oi-plus" /> Nuevo Vehiculo</a>
+        <a class="btn btn-sm btn-primary float-end" href="/ListVehi/AgregarEqui"><i class="oi oi-plus" /> Nuevo Equipo</a>
     </div>
     <div class="card-body">
         <div class="mb-2" style="display: flex; flex-wrap:wrap; align-items: center;">
@@ -22,113 +24,132 @@
                 <div>
                     <input style="width: 400px;" type="text" class="form-control" id="titulo" placeholder="Buscar Equipo o vehiculo..." @bind-value="Filter" />
                 </div>
-                <div class="mx-1">
-                    <button type="button" class="btn btn-outline-primary" @onclick="ApplyFilterAsync">Filtrar</button>
-                    <button type="button" class="btn btn-outline-danger" @onclick="CleanFilterAsync">Limpiar</button>
+                <div class="mx-1" >
+                    <button type="button" class="btn btn-outline-primary" @onclick="ApplyFilterAsync"><i class="oi oi-layers" /> Filtrar</button>
+                    <button type="button" class="btn btn-outline-danger" @onclick="CleanFilterAsync"><i class="oi oi-ban" /> Limpiar</button>
+                </div>
+                <div class="float-end">
+                    <Paginacion CurrentPage="currentPage"
+                                TotalPages="totalPages"
+                                SelectedPage="SelectedPageAsync" />
                 </div>
             </div>
+
         </div>
-        <Paginacion CurrentPage="currentPage"
-                    TotalPages="totalPages"
-                    SelectedPage="SelectedPageAsync" />
     </div>
+
 </div>
 
-<h3>Equipos</h3>
-
-<GenericList Mylist="Equipos">
-    <Body>
-         <div class="card">
-            <div class="card-body">
-
-
-
-                <table class="table table-striped">
-                    <thead>
-                        <tr class="table-bordered">
-                            <th>Id</th>
-                            <th>Nombre</th>
-                            <th>Tipo</th>
-                            <th>Acciones</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach (var equipo in Equipos!)
-                        {
-                            <tr>
-                                <td>
-                                    @equipo.ID_EQUIPO
-                                </td>
-                                <td>
-                                    @equipo.NOMBRE_EQUIPO
-
-                                </td>
-                                <td>
-                                    @equipo.TIPO_EQUIPO
-                                </td>
-                                <td>
-                                    <button class="btn btn-danger" @onclick=@(() => DeleteEAsync(equipo.ID_EQUIPO))>Eliminar</button>
-                                </td>
-                            </tr>
-                        }
-                    </tbody>
-                </table>
-            </div>
+@if (vehiculos is null)
+{
+    <div style="position: fixed; top: 50%; left: 50%;">
+        <div class="spinner-border text-success" role="status" style="height:200px; width:200px;">
+            <span class="visually-hidden">Loading...</span>
         </div>
-    </Body>
-</GenericList>
+    </div>
+}
+else
+{
 
-<h3>Vehiculos</h3>
+    <h3>Equipos</h3>
 
-
-
-<GenericList Mylist="vehiculos">
-    <Body>
-        <div class="card">
-            <div class="card-body">
-                <table class="table table-striped">
-                    <thead>
-                        <tr class="table-bordered">
-                            <th>Sigla</th>
-                            <th>Patente</th>
-                            <th>Marca</th>
-                            <th>Revision tecnica</th>
-                            <th>Modelo</th>
-                            <th>Acciones</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach (var vehiculo in vehiculos!)
-                        {
-                            <tr>
-                                <td>
-                                    @vehiculo.SIGLA
-                                </td>
-                                <td>
-                                    @vehiculo.PATENTE
-                                </td>
-                                <td>
-                                    @vehiculo.MARCA
-                                </td>
-                                <td>
-                                    @vehiculo.ULTIMA_REVISION_TEC
-                                </td>
-                                <td>
-                                    @vehiculo.Modelo
-                                </td>
-                                <td>
-                                    <a class="btn btn-warning" href="/ListVehi/edit/@vehiculo.SIGLA">Editar</a>
-                                    <button class="btn btn-danger" @onclick=@(() => DeleteAsync(vehiculo.SIGLA))>Eliminar</button>
-                                    <a class="btn btn-success" href="/ListVehi/Info/@vehiculo.SIGLA">Detalles</a>
-                                </td>
+    <GenericList Mylist="Equipos">
+        <Body>
+            <div class="card">
+                <div class="card-body">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr class="table-bordered">
+                                <th>Id</th>
+                                <th>Nombre</th>
+                                <th>Tipo</th>
+                                <th>Acciones</th>
                             </tr>
-                        }
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody>
+                            @foreach (var equipo in Equipos!)
+                            {
+                                <tr>
+                                    <td>
+                                        @equipo.ID_EQUIPO
+                                    </td>
+                                    <td>
+                                        @equipo.NOMBRE_EQUIPO
+
+                                    </td>
+                                    <td>
+                                        @equipo.TIPO_EQUIPO
+                                    </td>
+                                    <td>
+                                        <button class="btn btn-danger" @onclick=@(() => DeleteEAsync(equipo.ID_EQUIPO))>Eliminar</button>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
             </div>
-        </div>
-    </Body>
-</GenericList>
+        </Body>
+    </GenericList>
+
+    <br/>
+
+    <h3>Vehiculos</h3>
+
+
+
+    <GenericList Mylist="vehiculos">
+        <Body>
+            <div class="card">
+                <div class="card-body">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr class="table-bordered">
+                                <th>Sigla</th>
+                                <th>Patente</th>
+                                <th>Marca</th>
+                                <th>Revision tecnica</th>
+                                <th>Modelo</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var vehiculo in vehiculos!)
+                            {
+                                <tr>
+                                    <td>
+                                        @vehiculo.SIGLA
+                                    </td>
+                                    <td>
+                                        @vehiculo.PATENTE
+                                    </td>
+                                    <td>
+                                        @vehiculo.MARCA
+                                    </td>
+                                    <td>
+                                        @vehiculo.ULTIMA_REVISION_TEC
+                                    </td>
+                                    <td>
+                                        @vehiculo.Modelo
+                                    </td>
+                                    <td>
+                                        <a class="btn btn-warning" href="/ListVehi/edit/@vehiculo.SIGLA">Editar</a>
+                                        <button class="btn btn-danger" @onclick=@(() => DeleteAsync(vehiculo.SIGLA))>Eliminar</button>
+                                        <a class="btn btn-success" href="/ListVehi/Info/@vehiculo.SIGLA">Detalles</a>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </Body>
+    </GenericList>
+}
+
+
+
+
 
 
 @code {
