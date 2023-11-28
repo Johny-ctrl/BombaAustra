@@ -1,0 +1,8 @@
+﻿.all {
+    text-align: center;
+    display: flex;
+    flex-wrap: wrap;
+}
+.all button{
+    background-color: rgba(0, 0, 139, 0.7);
+}
