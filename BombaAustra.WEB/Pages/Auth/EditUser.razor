@@ -27,14 +27,14 @@ else
                         <div class="mb-3">
                             <label>ID RUT:</label>
                             <div>
-                                <InputText class="form-control" @bind-Value="@user.ID_RUT" />
+                                <InputText class="form-control" @bind-Value="@user.ID_RUT" disabled="@true" />
                                 <ValidationMessage For="@(() => user.ID_RUT)" />
                             </div>
                         </div>
                         <div class="mb-3">
                             <label>DV RUT:</label>
                             <div>
-                                <InputText class="form-control" @bind-Value="@user.DV_RUT" />
+                                <InputText class="form-control" @bind-Value="@user.DV_RUT" disabled="@true" />
                                 <ValidationMessage For="@(() => user.DV_RUT)" />
                             </div>
                         </div>

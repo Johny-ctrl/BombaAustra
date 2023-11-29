@@ -25,9 +25,81 @@
 
     </div>
 
+    <div class="card">
+        <div class="card-header">
+            <i class="oi oi-be"></i> Notificaciones
+        </div>
+        <div class="card-body">
+            @if (vehiculo != null)
+            {
+                // Agrega esta línea para imprimir la cantidad de vehículos antes de aplicar el filtro
+                <p>Cantidad de vehículos antes del filtro: @vehiculo.Count</p>
+
+                var fechaLimite = DateTime.UtcNow.Date.AddDays(-5);
+                var fechaLimiteSuperior = DateTime.UtcNow.Date;
+
+                var vehiculosProximos = vehiculo
+                .Where(v =>
+                {
+                    var fechaRevision = v.ULTIMA_REVISION_TEC;
+                    var estaDentroDelRango = fechaRevision <= fechaLimite && fechaRevision <= fechaLimiteSuperior;
+
+                    Console.WriteLine($"Sigla: {v.SIGLA}, Última Revisión Técnica: {fechaRevision}, ¿Dentro del Rango?: {estaDentroDelRango}");
+
+                    return estaDentroDelRango;
+                });
+
+                // ...
+
+
+                // Agrega esta línea para imprimir la cantidad de vehículos después del filtro
+                <p>Cantidad de vehículos después del filtro: @vehiculosProximos.Count()</p>
+            
+
+                if (vehiculosProximos.Any())
+                {
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Sigla</th>
+                                <th>Mensaje</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var vehiculoProximo in vehiculosProximos)
+                            {
+                                <tr>
+                                    <td>@vehiculoProximo.SIGLA</td>
+                                    <td>
+                                        @if (vehiculoProximo.ULTIMA_REVISION_TEC >= fechaLimite && vehiculoProximo.ULTIMA_REVISION_TEC <= fechaLimiteSuperior)//esta kgada gano xd
+                                        {
+                                            <span>Próximo a revisión técnica</span>
+                                        }
+                                        else if (vehiculoProximo.ULTIMA_REVISION_TEC < fechaLimite)
+                                        {
+                                            <span>Atrasado en revisión técnica</span>
+                                        }
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                }
+                else
+                {
+                    <div class="text-center">
+                        <p>No hay vehículos próximos o atrasados en la revisión técnica.</p>
+                    </div>
+                }
+            }
+
+        </div>
+
+    </div>
+
 </body>
 @code {
-
+    private List<TipoVehiculo>? vehiculo;
 
     public void EstadoVehiculos()
     {
@@ -58,5 +130,27 @@
     {
         Navigation.NavigateTo("/generate-pdf");
     }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await Load();
+    }
+    //obtener lista de vehiculos
+    private async Task Load()
+    {
+        try
+        {
+            var responseHttp = await repository.Get<List<TipoVehiculo>>("/api/TipoV");
+            vehiculo = responseHttp.Response;
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error al cargar la lista de vehículo: {ex.Message}");
+            // Puedes manejar el error según tus necesidades
+            // Por ejemplo, mostrar un mensaje de error al usuario
+            // y/o loggear el error para su posterior análisis
+        }
+    }
+
 
 }
