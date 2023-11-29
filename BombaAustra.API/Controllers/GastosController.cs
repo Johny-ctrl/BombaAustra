@@ -13,7 +13,7 @@ namespace BombaAustra.API.Controllers
     [ApiController]
     [Route("/api/gastos")]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-    public class GastosController :ControllerBase
+    public class GastosController : ControllerBase
     {
         private readonly DataContext _context;
 
@@ -88,17 +88,30 @@ namespace BombaAustra.API.Controllers
         }
 
 
-        //Obtener por ID
-        [HttpGet("{id}")] //<-- Se utiliza para obtener los datos de la BBDD
-
-        public async Task<IActionResult> GetAsync(string id) //<--Mejor es async , los async ocupan todos los procesadores del pc, lo hace mas eficiente
+        [HttpGet("{valor}")]
+        public async Task<IActionResult> GetGasto(string valor)
         {
-            var gasto = await _context.GASTO.FirstOrDefaultAsync(x => x.SIGLA == id);
-            if (gasto == null)
+            if (int.TryParse(valor, out int idGasto))
             {
-                return NotFound();
+                // Si la conversión tiene éxito, buscar por ID_GASTO
+                var gastoById = await _context.GASTO.FirstOrDefaultAsync(x => x.ID_GASTO == idGasto);
+
+                if (gastoById != null)
+                {
+                    return Ok(gastoById);
+                }
             }
-            return Ok(gasto);
+
+            // Si la conversión no tiene éxito o no se encuentra por ID_GASTO, buscar por SIGLA
+            var gastosBySigla = await _context.GASTO.Where(x => x.SIGLA == valor).ToListAsync();
+
+            if (gastosBySigla.Any())
+            {
+                return Ok(gastosBySigla);
+            }
+
+            // Si no se encuentra por SIGLA ni por ID_GASTO, devolver NotFound
+            return NotFound();
         }
 
         [HttpPut]
@@ -138,5 +151,7 @@ namespace BombaAustra.API.Controllers
             await _context.SaveChangesAsync();//<--Aqui se guardan los datos
             return NoContent();
         }
+
+
     }
 }

@@ -1,4 +1,4 @@
-﻿@page "/ListVehi/Info/{id}"
+﻿@page "/ListVehi/Info/{SIGLA}"
 @inject IRepository repository
 @inject NavigationManager navigate
 @inject SweetAlertService swwetAlertService
@@ -62,37 +62,34 @@
             <i class="oi oi-dollar"></i> Gastos
         </div>
         <div class="card-body">
-            <table class="table table-striped">
-                <thead>
-                    <tr class="table-bordered">
-                        <th>Monto</th>
-                        <th>Descripcion</th>
-                        <th>Fecha de creacion</th>
-                    </tr>
-                </thead>
-                <tbody>
-                @foreach (var gasto in Gasto!)
-                    {
-                    <tr>
-                        <td>
-                            @gasto.ID_GASTO
-                        </td>
-                        <td>
-                            @gasto.SIGLA
-                        </td>
-                        <td>
-                            @gasto.MONTO
-                        </td>
-                        <td>
-                            @gasto.DESCRIPCION
-                        </td>
-                        <td>
-                            @gasto.FechaCreacion.ToString("dd/MM/yyyy")
-                        </td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
+                @if (Gasto != null)
+                {
+                    <table class="table table-striped">
+                        <thead>
+                            <tr class="table-bordered">
+                                <th>SIGLA</th>
+                                <th>MONTO</th>
+                                <th>DESCRIPCION</th>
+                                <th>Fecha de Creación</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var gasto in Gasto)
+                            {
+                                <tr>
+                                    <td>@gasto.SIGLA</td>
+                                    <td>@gasto.MONTO</td>
+                                    <td>@gasto.DESCRIPCION</td>
+                                    <td>@gasto.FechaCreacion.ToString("dd/MM/yyyy")</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                }
+                else
+                {
+                    <p>No hay datos para mostrar.</p>
+                }
         </div>
     </div>
 
@@ -118,7 +115,7 @@
 
 
     [Parameter]
-    public string id { get; set; } = null!;
+    public string SIGLA { get; set; } = null!;
 
     [Parameter]
     [SupplyParameterFromQuery]
@@ -140,7 +137,7 @@
     private async Task LoadAsync()
     {
         //para vehiculo
-        var responseVHttp = await repository.Get<TipoVehiculo>($"/api/TipoV/{id}");
+        var responseVHttp = await repository.Get<TipoVehiculo>($"/api/TipoV/{SIGLA}");
         if (responseVHttp.Error)
         {
             if (responseVHttp.HttpResponseMessage.StatusCode == System.Net.HttpStatusCode.NotFound)
@@ -154,9 +151,6 @@
         }
         vehiculo = responseVHttp.Response;
         //vehiculos = vehiculo!.SIGLA!.ToList();
-
-        var responseHttp = await repository.Get<List<Gastos>>($"/api/gastos/{id}");
-        Gasto = responseHttp.Response;
 
 
     }
@@ -245,8 +239,9 @@
     {
         try
         {
-            var responseHttp = await repository.Get<List<Gastos>>($"/api/gastos/{id}");
+            var responseHttp = await repository.Get<List<Gastos>>($"/api/gastos/{SIGLA}");
             Gasto = responseHttp.Response;
+            // Aquí, 'gasto' ya es una lista de objetos Gastos
         }
         catch (Exception ex)
         {

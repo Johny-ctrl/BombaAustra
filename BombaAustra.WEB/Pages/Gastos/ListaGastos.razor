@@ -61,8 +61,8 @@
                                     @gasto.FechaCreacion.ToString("dd/MM/yyyy")
                                 </td>
                                 <td>
-                                    <button class="btn btn-danger" @onclick="(() => DeleteAsync(gasto.SIGLA))">Eliminar</button>
-                                    <a class="btn btn-success">Detalles</a>
+                                    <button class="btn btn-danger" @onclick="(() => DeleteAsync(gasto.ID_GASTO))">Eliminar</button>
+                                    <a class="btn btn-success" href="/Gastos/Gastoinfo/@gasto.ID_GASTO">Detalles</a>
                                 </td>
                             </tr>
                         }
@@ -142,7 +142,7 @@
 
     }
 
-    private async Task DeleteAsync(string ID)
+    private async Task DeleteAsync(int ID)
     {
         var result = await sweetAlertService.FireAsync(new SweetAlertOptions
             {

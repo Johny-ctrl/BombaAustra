@@ -1,8 +1,9 @@
-﻿using System.Text;
+﻿using System.Net.Http;
+using System.Text;
 using System.Text.Json;
-
-
+using System.Net.Http;
 namespace BombaAustra.WEB.Repositories
+
 
 {
     public class Repository : IRepository
@@ -19,13 +20,16 @@ namespace BombaAustra.WEB.Repositories
             _httpClient = httpClient;
         }
 
-        public async Task<HttpResponseWrapper<T>> Get<T>(string url)//<-- Get de T 
+        public async Task<HttpResponseWrapper<T>> Get<T>(string url)
         {
             var responseHttp = await _httpClient.GetAsync(url);
+
             if (responseHttp.IsSuccessStatusCode)
             {
-                var response = await UnserializeAnswer<T>(responseHttp, _jsonDefaultOptions);
-                return new HttpResponseWrapper<T>(response, false, responseHttp);
+                var responseStream = await responseHttp.Content.ReadAsStreamAsync();
+                var responseObject = await JsonSerializer.DeserializeAsync<T>(responseStream, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+
+                return new HttpResponseWrapper<T>(responseObject, false, responseHttp);
             }
 
             return new HttpResponseWrapper<T>(default, true, responseHttp);
@@ -94,6 +98,7 @@ namespace BombaAustra.WEB.Repositories
             var responseHTTP = await _httpClient.GetAsync(url);
             return new HttpResponseWrapper<object>(null, !responseHTTP.IsSuccessStatusCode, responseHTTP);
         }
+
 
     }
 
