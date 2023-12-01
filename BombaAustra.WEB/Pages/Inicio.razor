@@ -35,19 +35,11 @@
                 // Agrega esta línea para imprimir la cantidad de vehículos antes de aplicar el filtro
                 <p>Cantidad de vehículos antes del filtro: @vehiculo.Count</p>
 
-                var fechaLimite = DateTime.UtcNow.Date.AddDays(-5);
-                var fechaLimiteSuperior = DateTime.UtcNow.Date;
+                var fechaLimiteSuperior = DateTime.Now.AddDays(5);
+                var fechaLimiteInferior = DateTime.Now;
 
                 var vehiculosProximos = vehiculo
-                .Where(v =>
-                {
-                    var fechaRevision = v.ULTIMA_REVISION_TEC;
-                    var estaDentroDelRango = fechaRevision <= fechaLimite && fechaRevision <= fechaLimiteSuperior;
-
-                    Console.WriteLine($"Sigla: {v.SIGLA}, Última Revisión Técnica: {fechaRevision}, ¿Dentro del Rango?: {estaDentroDelRango}");
-
-                    return estaDentroDelRango;
-                });
+                .Where(v =>  v.ULTIMA_REVISION_TEC <= fechaLimiteSuperior);
 
                 // ...
 
@@ -71,11 +63,11 @@
                                 <tr>
                                     <td>@vehiculoProximo.SIGLA</td>
                                     <td>
-                                        @if (vehiculoProximo.ULTIMA_REVISION_TEC >= fechaLimite && vehiculoProximo.ULTIMA_REVISION_TEC <= fechaLimiteSuperior)//esta kgada gano xd
+                                        @if (vehiculoProximo.ULTIMA_REVISION_TEC >= fechaLimiteInferior && vehiculoProximo.ULTIMA_REVISION_TEC <= fechaLimiteSuperior)//esta kgada gano xd
                                         {
                                             <span>Próximo a revisión técnica</span>
                                         }
-                                        else if (vehiculoProximo.ULTIMA_REVISION_TEC < fechaLimite)
+                                        else if (vehiculoProximo.ULTIMA_REVISION_TEC < fechaLimiteInferior)
                                         {
                                             <span>Atrasado en revisión técnica</span>
                                         }
@@ -94,7 +86,6 @@
             }
 
         </div>
-
     </div>
 
 </body>
