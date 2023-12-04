@@ -7,22 +7,22 @@
 @inject NavigationManager navigationManager
 @inject ILoginService loginService
 
-<h3>Registrar Nuevo Usuario</h3>
+<h3 style="margin: 20px auto;">Registrar Nuevo Usuario</h3>
 
 <EditForm Model="userDTO" OnValidSubmit="CreteUserAsync">
     <DataAnnotationsValidator />
 
-    <div class="card">
-            <div class="card-header">
+    <div class="card conteiner">
+        <div class="card-header card1">
                 <span>
                     <i class="oi oi-person" /> Registrar Nuevo  Usuario
-                    <button class="btn btn-sm btn-primary float-end" type="submit"><i class="oi oi-check" /> Registrar</button>
-                <a class="btn btn-sm btn-primary float-end oi oi-arrow-left" href="/AdminUsers">Regresar</a>
+                    <button class="btn btn-sm btn-primary float-end boton" type="submit"><i class="oi oi-check" /> Registrar</button>
+                <a class="btn btn-sm btn-primary float-end boton" href="/AdminUsers"><i class="oi oi-arrow-left" /> Regresar</a>
                 </span>
             </div>
 
-        <div class="row">
-            <div class="col-6">
+        <div>
+            <div class="card2">
                 <div class="mb-3">
                     <label>ID RUT:</label>
                     <div>
@@ -81,7 +81,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-6">
+            <div class="card2">
                 <div class="mb-3">
                     <label>Contraseña:</label>
                     <div>

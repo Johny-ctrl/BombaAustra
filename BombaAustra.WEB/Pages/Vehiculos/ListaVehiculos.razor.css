@@ -1,0 +1,21 @@
+﻿.conteiner {
+    margin: 20px auto;
+}
+
+.card1 {
+    background-color: #990000;
+    color: white
+}
+
+.card2 {
+    margin: 20px;
+}
+
+.boton {
+    background-color: rgba(0, 0, 139, 0.7);
+    border: 2px solid #ffdb58;
+    margin: 5px;
+    width: 200px;
+    height: 35px;
+    border-radius: 10px;
+}
