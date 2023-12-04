@@ -1,4 +1,5 @@
 ﻿
+/*Cambia la estetica de los botones, su tamaño y sus margenes*/
 .boton {
     background-color: rgba(0, 0, 139, 0.7);
     border: 1px solid #ffdb58;
@@ -6,4 +7,67 @@
     height: 200px;
     margin: 20px;
     border-radius: 20px;
+}
+
+/*Cambias estetica del carousel*/
+.carousel-container {
+    width: 800px; /* Ajusta el ancho del contenedor según tus necesidades */
+    height: 400px; /*ajusta el alto de la imagen*/
+    margin: 20px auto; /* Centra el contenedor en la página */
+    overflow: hidden; /* Oculta cualquier contenido adicional fuera del contenedor */
+    border: 4px solid #ffdb58;
+    border-radius: 20px;
+}
+
+.carousel {
+    display: flex;
+    animation: scroll 60s linear infinite; /* Ajusta la duración según sea necesario */ 
+}
+
+.carousel img {
+    width: 800px; 
+    height: 400px;
+}
+
+/*Añade el movimiento del carousel*/
+@keyframes scroll {
+    0% {
+        transform: translateX(0);
+    }
+
+    10% {
+        transform: translateX(-50%);
+    }
+
+    20% {
+        transform: translateX(-100%);
+    }
+    
+    40% {
+        transform: translateX(-150%);
+    }
+
+    50% {
+        transform: translateX(-200%);
+    }
+
+    60% {
+        transform: translateX(-250%);
+    }
+
+    70% {
+        transform: translateX(-300%);
+    }
+
+    80% {
+        transform: translateX(-350%);
+    }
+
+    100% {
+        transform: translateX(0);
+    }
+}
+
+img {
+    width: 100%;
 }

@@ -12,11 +12,9 @@
 <body>
     <div class="text-center">
         <button @onclick="EstadoVehiculos" class="btn btn-success boton">Lista Vehiculo</button>
-        <button @onclick="Reportes" class="btn btn-success boton" >Reportes Existentes</button>
         <AuthorizeView Roles="AdministradorGeneral,AdministradorCompañia boton">
             <button @onclick="AdminUsers" class="btn btn-success boton" >Administrar usuarios</button>
             <button @onclick="AddUsers" class="btn btn-success boton" >Agregar Usuario</button>
-            <button class="btn btn-success boton" >Vista Usuario</button>
             <button @onclick="Gastos" class="btn btn-success boton" >Perfil Costos</button>
         </AuthorizeView>
 
@@ -87,6 +85,25 @@
 
         </div>
     </div>
+
+    <div class="carousel-container">
+        <div class="carousel">
+            <img src="/images/logo.png" alt="Logo 1"/>
+            <img src="/images/bbc.png" alt="BBC" />
+            <img src="/images/bbm.png" alt="BBM" />
+            <img src="/images/bbn.png" alt="BBN" />
+            <img src="/images/eez.png" alt="EEZ" />
+            <img src="/images/eex.png" alt="EEX" />
+            <img src="/images/logo.png" alt="Logo 2" />
+            <!-- Agrega más imágenes según sea necesario -->
+        </div>
+    </div>
+
+
+    
+
+
+
 
 </body>
 @code {
