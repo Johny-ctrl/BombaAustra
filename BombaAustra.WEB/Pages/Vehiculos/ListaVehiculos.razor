@@ -6,14 +6,14 @@
 @using iText.Layout.Element;
 @using iText.Layout;
 
-<h3 class="text-center">Lista de vehiculos y equipos</h3>
+<h3 class="text-center" style="margin: 20px auto;">Lista de vehiculos y Equipos</h3>
 
 <div class="text-center">
     <img src="/images/Logo_camion.png" style="height:90px; width:90px;" />
 </div>
 
 <div class="card">
-    <div class="card-header">
+    <div class="card-header card1">
         <i class="oi oi-calculator"></i> Opciones
         <a class="btn btn-sm btn-primary float-end boton" href="/ListVehi/AddVehi"><i class="oi oi-plus" /> Nuevo Vehiculo</a>
         <a class="btn btn-sm btn-primary float-end boton" href="/ListVehi/AgregarEqui"><i class="oi oi-plus" /> Nuevo Equipo</a>
@@ -51,7 +51,7 @@
 else
 {
 
-    <h3>Equipos</h3>
+    <h3 style="margin: 20px auto;">Equipos</h3>
 
     <GenericList Mylist="Equipos">
         <Body>
@@ -59,7 +59,7 @@ else
                 <div class="card-body">
                     <table class="table table-striped">
                         <thead>
-                            <tr class="table-bordered">
+                            <tr class="table-bordered card1">
                                 <th>Id</th>
                                 <th>Nombre</th>
                                 <th>Tipo</th>
@@ -94,7 +94,7 @@ else
 
     <br/>
 
-    <h3>Vehiculos</h3>
+    <h3 style="margin: 20px auto;">Vehiculos</h3>
 
 
 
@@ -104,7 +104,7 @@ else
                 <div class="card-body">
                     <table class="table table-striped">
                         <thead>
-                            <tr class="table-bordered">
+                            <tr class="table-bordered card1">
                                 <th>Sigla</th>
                                 <th>Patente</th>
                                 <th>Marca</th>
