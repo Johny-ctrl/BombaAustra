@@ -28,7 +28,6 @@ namespace BombaAustra.API.Data
         private async Task CheckRolesAsync()
         {
             await _userHelper.CheckRoleAsync(UserType.AdministradorGeneral.ToString());
-            await _userHelper.CheckRoleAsync(UserType.AdministradorCompañia.ToString());
             await _userHelper.CheckRoleAsync(UserType.Usuario.ToString());
         }
 

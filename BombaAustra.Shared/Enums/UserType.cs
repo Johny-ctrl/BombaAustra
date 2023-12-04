@@ -9,7 +9,6 @@ namespace BombaAustra.Shared.Enums
         public enum UserType
         {
             AdministradorGeneral,
-            AdministradorCompañia,
             Usuario
         }
 
