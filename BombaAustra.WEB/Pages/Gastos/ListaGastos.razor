@@ -3,12 +3,12 @@
 @inject NavigationManager Navigation
 @inject SweetAlertService sweetAlertService
 
-<h3>Lista de Costos </h3>
+<h3 class="titulos">Lista de Costos </h3>
 
-<div class="card">
-    <div class="card-header">
+<div class="card conteiner">
+    <div class="card-header bloque">
         <i class="oi oi-calculator"></i> Opciones
-        <a class="btn btn-sm btn-primary float-end" href="/Gastos/gastoAdd">Agregar Gasto</a>
+        <a class="btn btn-sm btn-primary float-end boton" href="/Gastos/gastoAdd">Agregar Gasto</a>
     </div>
     <div class="card-body">
         <div class="mb-2" style="display: flex; flex-wrap:wrap; align-items: center;">
@@ -36,7 +36,7 @@
             <div class="card-body">
                 <table class="table table-striped">
                     <thead>
-                        <tr class="table-bordered">
+                        <tr class="table-bordered bloque">
                             <th>Id Gasto</th>
                             <th>Sigla</th>
                             <th>Monto</th>

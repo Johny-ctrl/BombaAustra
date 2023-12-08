@@ -1,0 +1,56 @@
+﻿@page "/Graficos"
+@using ChartJs.Blazor.PieChart
+@using Microsoft.AspNetCore.Authorization;
+@inject IRepository repository
+@inject NavigationManager Navigation
+
+
+
+<h3>Lista de graficos</h3>
+
+<Chart Config="_ConfiguracionPastel"></Chart>
+
+@code{
+    private PieConfig _ConfiguracionPastel;
+
+    protected override void OnInitialized()
+    {
+        RealizarConfiguracionPaste();
+    }
+
+    private void RealizarConfiguracionPaste()
+    {
+        _ConfiguracionPastel = new PieConfig();
+
+        _ConfiguracionPastel.Options = new PieOptions
+            {
+                Responsive = true,
+                Title = new OptionsTitle
+                {
+                    Display = true,
+                    Text = "Inventario"
+                }
+
+            };
+
+        foreach(var item in new[] {"Usuarios", "Equipos", "Vehiculos" })
+        {
+            _ConfiguracionPastel.Data.Labels.Add(item);
+        }
+
+        PieDataset<int> dataset = new PieDataset<int>(new[] { 35, 50, 15 })
+        {
+            BackgroundColor = new[]
+            {
+                ColorUtil.ColorHexString(255,0,0),
+                ColorUtil.ColorHexString(0,255,0),
+                ColorUtil.ColorHexString(0,0,255)
+            }
+        };
+
+        _ConfiguracionPastel.Data.Datasets.Add(dataset);
+
+    }
+
+}
+

@@ -17,7 +17,7 @@
             <button @onclick="AddUsers" class="btn btn-success boton" >Agregar Usuario</button>
         </AuthorizeView>
         <button @onclick="Gastos" class="btn btn-success boton">Perfil Costos</button>
-
+        <button @onclick="Grafico" class="boton">Perfil de graficos</button> 
 
 
 
@@ -137,6 +137,11 @@
     public void PDF()
     {
         Navigation.NavigateTo("/generate-pdf");
+    }
+
+    public void Grafico()
+    {
+        Navigation.NavigateTo("/Graficos");
     }
 
     protected override async Task OnInitializedAsync()
