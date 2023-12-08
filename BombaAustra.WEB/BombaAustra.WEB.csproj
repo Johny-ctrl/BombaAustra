@@ -7,15 +7,19 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Pages\Equipos\**" />
     <Compile Remove="Pages\InicioSesion\**" />
     <Compile Remove="Pages\Inicio\**" />
     <Compile Remove="Pages\NewFolder\**" />
+    <Content Remove="Pages\Equipos\**" />
     <Content Remove="Pages\InicioSesion\**" />
     <Content Remove="Pages\Inicio\**" />
     <Content Remove="Pages\NewFolder\**" />
+    <EmbeddedResource Remove="Pages\Equipos\**" />
     <EmbeddedResource Remove="Pages\InicioSesion\**" />
     <EmbeddedResource Remove="Pages\Inicio\**" />
     <EmbeddedResource Remove="Pages\NewFolder\**" />
+    <None Remove="Pages\Equipos\**" />
     <None Remove="Pages\InicioSesion\**" />
     <None Remove="Pages\Inicio\**" />
     <None Remove="Pages\NewFolder\**" />
@@ -28,9 +32,6 @@
 
   <ItemGroup>
     <Content Remove="Pages\Counter.razor" />
-    <Content Remove="Pages\Equipos\AgregarEquipo.razor" />
-    <Content Remove="Pages\Equipos\EquipoForm.razor" />
-    <Content Remove="Pages\Equipos\ModificarEquipo.razor" />
     <Content Remove="Pages\FetchData.razor" />
     <Content Remove="Pages\Usuarios\ConfUsers.razor" />
     <Content Remove="Pages\Usuarios\UsuarioForm.razor" />
@@ -72,10 +73,6 @@
     <Content Update="wwwroot\images\Logo_camion.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Pages\Equipos\" />
   </ItemGroup>
 
 </Project>

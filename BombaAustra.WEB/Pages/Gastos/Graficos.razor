@@ -1,39 +1,48 @@
 ﻿@page "/Graficos"
+@using ChartJs.Blazor.Common;
 @using ChartJs.Blazor.PieChart
-@using Microsoft.AspNetCore.Authorization;
+@using ChartJs.Blazor.Util;
+@using Microsoft.AspNetCore.Authorization
 @inject IRepository repository
 @inject NavigationManager Navigation
 
+<h3>Gráfico de Líneas</h3>
 
-
-<h3>Lista de graficos</h3>
-
+<!-- Contenido de tu gráfico -->
 <Chart Config="_ConfiguracionPastel"></Chart>
 
-@code{
-    private PieConfig _ConfiguracionPastel;
+@code {
+    private PieConfig? _ConfiguracionPastel;
 
-    protected override void OnInitialized()
+    protected override async Task OnInitializedAsync()
     {
-        RealizarConfiguracionPaste();
+        try
+        {
+            await RealizarConfiguracionPasteAsync();
+        }
+        catch (Exception ex)
+        {
+            Console.Error.WriteLine($"Error durante la inicialización del gráfico: {ex.Message}");
+            // Puedes registrar o manejar el error de alguna manera aquí
+        }
     }
 
-    private void RealizarConfiguracionPaste()
+
+    private async Task RealizarConfiguracionPasteAsync()
     {
         _ConfiguracionPastel = new PieConfig();
 
         _ConfiguracionPastel.Options = new PieOptions
+        {
+            Responsive = true,
+            Title = new OptionsTitle
             {
-                Responsive = true,
-                Title = new OptionsTitle
-                {
-                    Display = true,
-                    Text = "Inventario"
-                }
+                Display = true,
+                Text = "Tirulo"
+            }
+        };
 
-            };
-
-        foreach(var item in new[] {"Usuarios", "Equipos", "Vehiculos" })
+        foreach (var item in new[] { "partido1", "Partido2", "Partido3" })
         {
             _ConfiguracionPastel.Data.Labels.Add(item);
         }
@@ -42,15 +51,12 @@
         {
             BackgroundColor = new[]
             {
-                ColorUtil.ColorHexString(255,0,0),
-                ColorUtil.ColorHexString(0,255,0),
-                ColorUtil.ColorHexString(0,0,255)
+                ColorUtil.ColorHexString(255, 0, 0),
+                ColorUtil.ColorHexString(0, 255, 0),
+                ColorUtil.ColorHexString(0, 0, 255)
             }
         };
 
         _ConfiguracionPastel.Data.Datasets.Add(dataset);
-
     }
-
 }
-
