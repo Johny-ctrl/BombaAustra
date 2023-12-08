@@ -17,7 +17,7 @@
         if (httpResponse.Error)
         {
             var message = await httpResponse.GetErrorMessageAsync();
-            await sweetAlertService.FireAsync("Error", message);
+            await sweetAlertService.FireAsync("Error", "Los datos son invalidos o faltan por rellenar");
             return;
         }
         equipoForm!.formPostedSucces = true;

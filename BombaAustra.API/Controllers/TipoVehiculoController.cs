@@ -136,5 +136,12 @@ namespace BombaAustra.API.Controllers
             await _context.SaveChangesAsync();//<--Aqui se guardan los datos
             return NoContent();
         }
+
+        [HttpGet ("TotalVehiculos")]
+
+        public async Task<IActionResult> GetEverything()
+        {
+            return Ok(await _context.TIPO_VEHICULO.ToListAsync());
+        }
     }
 }

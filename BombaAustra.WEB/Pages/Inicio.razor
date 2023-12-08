@@ -148,7 +148,7 @@
     {
         try
         {
-            var responseHttp = await repository.Get<List<TipoVehiculo>>("/api/TipoV");
+            var responseHttp = await repository.Get<List<TipoVehiculo>>("/api/TipoV/TotalVehiculos");
             vehiculo = responseHttp.Response;
         }
         catch (Exception ex)

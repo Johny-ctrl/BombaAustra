@@ -28,19 +28,22 @@
 
   <ItemGroup>
     <Content Remove="Pages\Counter.razor" />
+    <Content Remove="Pages\Equipos\AgregarEquipo.razor" />
+    <Content Remove="Pages\Equipos\EquipoForm.razor" />
+    <Content Remove="Pages\Equipos\ModificarEquipo.razor" />
     <Content Remove="Pages\FetchData.razor" />
     <Content Remove="Pages\Usuarios\ConfUsers.razor" />
     <Content Remove="Pages\Usuarios\UsuarioForm.razor" />
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="Pages\Usuarios\AgregarUsuario.razor" />
     <None Include="Pages\Vehiculos\AgregarEquipo.razor" />
-    <None Include="Pages\Vehiculos\AgregarVehiculo.razor" />
     <None Include="Pages\Vehiculos\EquipoForm.razor" />
+    <None Include="Pages\Vehiculos\ModificarEquipo.razor" />
+    <None Include="Pages\Usuarios\AgregarUsuario.razor" />
+    <None Include="Pages\Vehiculos\AgregarVehiculo.razor" />
     <None Include="Pages\Vehiculos\InfoVehiculos.razor" />
     <None Include="Pages\Vehiculos\ListaVehiculos.razor" />
-    <None Include="Pages\Vehiculos\ModificarEquipo.razor" />
     <None Include="Pages\Vehiculos\ModificarVehiculo.razor" />
     <None Include="Pages\Vehiculos\Reportes.razor" />
     <None Include="Pages\Vehiculos\VehiculoForm.razor" />
@@ -68,6 +71,10 @@
     <Content Update="wwwroot\images\Logo_camion.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Pages\Equipos\" />
   </ItemGroup>
 
 </Project>

@@ -113,7 +113,7 @@
         if (responseHttp.Error)
         {
             var message = await responseHttp.GetErrorMessageAsync();
-            await sweetAlertService.FireAsync("Error", message, SweetAlertIcon.Error);
+            await sweetAlertService.FireAsync("Error", "El usuario ya existe o falta un campo obligatorio", SweetAlertIcon.Error);
             return;
         }
 

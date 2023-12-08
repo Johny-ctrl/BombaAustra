@@ -82,22 +82,28 @@
                                     <td>@gasto.DESCRIPCION</td>
                                     <td>@gasto.FechaCreacion.ToString("dd/MM/yyyy")</td>
                                 </tr>
+                                
                             }
                         </tbody>
                     </table>
+            decimal totalMonto = Gasto.Sum(g => g.MONTO);
+            <p>Total de Montos: @totalMonto</p>
                 }
                 else
                 {
                     <p>No hay datos para mostrar.</p>
                 }
+
+
         </div>
     </div>
-
-<a class="btn btn-warning" href="/ListVehi/edit/@vehiculo?.SIGLA">Editar</a>
+<AuthorizeView Roles="AdministradorGeneral">
+    <a class="btn btn-warning" href="/ListVehi/edit/@vehiculo?.SIGLA">Editar</a>
+</AuthorizeView>
 <button class="btn btn-outline-success" @onclick="GeneratePdf">Generar PDF</button>
 @if (pdfBytes != null)
 {
-    <a href="data:application/pdf;base64,@pdfBase64" download="@vehiculo!.SIGLA">Descargar PDF</a>
+    <a href="data:application/pdf;base64,@pdfBase64" download="@vehiculo!.SIGLA" class="btn btn-outline-success"><i class="oi oi-data-transfer-download"/>Descargar PDF</a>
 }
 
 @code {
@@ -214,14 +220,15 @@
                 {
                     Cell cell1 = new Cell().Add(new Paragraph(monto.DESCRIPCION));
                     Cell cell2 = new Cell().Add(new Paragraph(monto.MONTO.ToString())); // Ajusta según tu modelo
-                    Cell cell3 = new Cell().Add(new Paragraph(monto.FechaCreacion.ToString("dd/MM/yyyy"))); // Ajusta según tu modelo
-
+                    Cell cell3 = new Cell().Add(new Paragraph(monto.FechaCreacion.ToString("dd/MM/yyyy"))); // Ajusta según tu mode
 
                     //agregamos las celdas
                     table.AddCell(cell1);
                     table.AddCell(cell2);
-                    table.AddCell(cell3);
+                    table.AddCell(cell3);       
                 }
+                decimal totalMonto = Gasto.Sum(g => g.MONTO);
+                document.Add(new Paragraph($"Costo Total: {totalMonto.ToString()}"));
 
                 // Agregar la tabla al documento
                 document.Add(table);

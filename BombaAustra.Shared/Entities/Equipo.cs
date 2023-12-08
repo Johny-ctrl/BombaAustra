@@ -12,9 +12,11 @@ namespace BombaAustra.Shared.Entities
     public class Equipo
     {
         [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int ID_EQUIPO {  get; set; }
         public TiposEquipo TIPO_EQUIPO { get; set; }
 
+        [Required(ErrorMessage = "EL campo NOMBRE EQUIPO es obligatorio")]
         public string NOMBRE_EQUIPO { get; set; } = null!;
 
 

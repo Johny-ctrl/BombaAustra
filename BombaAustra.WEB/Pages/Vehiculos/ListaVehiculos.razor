@@ -14,9 +14,12 @@
 
 <div class="card">
     <div class="card-header card1">
+
         <i class="oi oi-calculator"></i> Opciones
-        <a class="btn btn-sm btn-primary float-end boton" href="/ListVehi/AddVehi"><i class="oi oi-plus" /> Nuevo Vehiculo</a>
-        <a class="btn btn-sm btn-primary float-end boton" href="/ListVehi/AgregarEqui"><i class="oi oi-plus" /> Nuevo Equipo</a>
+        <AuthorizeView Roles="AdministradorGeneral">
+            <a class="btn btn-sm btn-primary float-end boton" href="/ListVehi/AddVehi"><i class="oi oi-plus" /> Nuevo Vehiculo</a>
+            <a class="btn btn-sm btn-primary float-end boton" href="/ListVehi/AgregarEqui"><i class="oi oi-plus" /> Nuevo Equipo</a>
+        </AuthorizeView>
     </div>
     <div class="card-body">
         <div class="mb-2" style="display: flex; flex-wrap:wrap; align-items: center;">
@@ -63,7 +66,9 @@ else
                                 <th>Id</th>
                                 <th>Nombre</th>
                                 <th>Tipo</th>
-                                <th>Acciones</th>
+                                <AuthorizeView Roles="AdministradorGeneral">
+                                    <th>Acciones</th>
+                                </AuthorizeView>
                             </tr>
                         </thead>
                         <tbody>
@@ -80,9 +85,11 @@ else
                                     <td>
                                         @equipo.TIPO_EQUIPO
                                     </td>
+                                    <AuthorizeView Roles="AdministradorGeneral">
                                     <td>
                                         <button class="btn btn-danger" @onclick=@(() => DeleteEAsync(equipo.ID_EQUIPO))>Eliminar</button>
                                     </td>
+                                    </AuthorizeView>
                                 </tr>
                             }
                         </tbody>
@@ -133,8 +140,10 @@ else
                                         @vehiculo.Modelo
                                     </td>
                                     <td>
+                                        <AuthorizeView Roles="AdministradorGeneral">
                                         <a class="btn btn-warning" href="/ListVehi/edit/@vehiculo.SIGLA">Editar</a>
                                         <button class="btn btn-danger" @onclick=@(() => DeleteAsync(vehiculo.SIGLA))>Eliminar</button>
+                                        </AuthorizeView>
                                         <a class="btn btn-success" href="/ListVehi/Info/@vehiculo.SIGLA">Detalles</a>
                                     </td>
                                 </tr>
@@ -146,9 +155,6 @@ else
         </Body>
     </GenericList>
 }
-
-
-
 
 
 
@@ -202,18 +208,22 @@ else
             url1 = $"api/TipoV?page={page}";
             url2 = $"api/TipoV/totalPages";
             url3 = $"api/Equipos?page={page}";
+            url4 = $"api/Equipos/totalPages";
         }
         else
         {
             url1 = $"api/TipoV?page={page}&filter={Filter}";
             url2 = $"api/TipoV/totalPages?filter={Filter}";
             url3 = $"api/Equipos?page={page}&filter={Filter}";
+            url4 = $"api/Equipo/totalPages?filter={Filter}";
         }
 
         try
         {
             var EquipoResponse = await repository.Get<List<Equipo>>(url3);//Devuelve la lista de Equipo
+            var EquipoResponse2 = await repository.Get<int>(url4);
             Equipos = EquipoResponse.Response;
+            totalPages = EquipoResponse2.Response;
 
             var vehiculoEResponse = await repository.Get<List<TipoVehiculo>>(url1);
             var vehiculoEResponse2 = await repository.Get<int>(url2);

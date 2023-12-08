@@ -34,6 +34,7 @@ namespace BombaAustra.API.Controllers// <--- Agrega esto
         [HttpPost("CreateUser")]
         public async Task<ActionResult> CreateUser([FromBody] UserDTO model)
         {
+
             Usuario user = model;
             var result = await _userHelper.AddUserAsync(user, model.Password);
             if (result.Succeeded)

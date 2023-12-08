@@ -1,4 +1,5 @@
 ﻿@page "/ListVehi/editarEquipo/{ID_EQUIPO:int}"
+@using BombaAustra.Shared.Entities;
 @inject IRepository repository
 @inject NavigationManager navigate
 @inject SweetAlertService swwetAlertService
@@ -12,7 +13,8 @@
 }
 else
 {
-    <EquipoForm @ref="equipoForm" Equipos="equipo" OnValidSubmit="EditAsync" ReturnAction="Return"/>
+       <EquipoForm @ref="equipoForm" Equipos="equipo" OnValidSubmit="EditAsync" ReturnAction="Return" />
+
 }
 @code {
     //Editar Equipos
