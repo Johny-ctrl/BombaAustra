@@ -152,6 +152,12 @@ namespace BombaAustra.API.Controllers
             return NoContent();
         }
 
+        [HttpGet("TotalGasto")]
+
+        public async Task<IActionResult> GetEverything()
+        {
+            return Ok(await _context.GASTO.ToListAsync());
+        }
 
     }
 }
