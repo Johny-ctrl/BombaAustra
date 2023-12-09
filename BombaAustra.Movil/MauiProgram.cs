@@ -1,4 +1,4 @@
-﻿using BombaAustra.Movil.Data;
+﻿
 using Microsoft.Extensions.Logging;
 
 namespace BombaAustra.Movil
@@ -21,8 +21,6 @@ namespace BombaAustra.Movil
 		builder.Services.AddBlazorWebViewDeveloperTools();
 		builder.Logging.AddDebug();
 #endif
-
-            builder.Services.AddSingleton<WeatherForecastService>();
 
             return builder.Build();
         }
