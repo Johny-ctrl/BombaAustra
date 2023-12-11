@@ -23,8 +23,9 @@ namespace BombaAustra.Movil
                 });
 
             builder.Services.AddMauiBlazorWebView();
+            builder.Services.AddScoped<HttpClient>(sp => new HttpClient { BaseAddress = new Uri("https://localhost:7240/") });
             //<-- por aqui se conecta al web, se coloca la ip de la api para conectar los proyectos
-            builder.Services.AddScoped<HttpClient>(sp => new HttpClient { BaseAddress = new Uri("http://localhost:7240/") });
+
 
 #if DEBUG
             builder.Services.AddBlazorWebViewDeveloperTools();
