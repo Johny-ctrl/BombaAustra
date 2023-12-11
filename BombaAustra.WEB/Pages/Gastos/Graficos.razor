@@ -4,11 +4,21 @@
 @inject IRepository repository
 @inject NavigationManager Navigation
 
-<h3>Gráfico de Barras</h3>
+<h1 style="margin: 20px auto; display: flex;">Listado de Graficos</h1>
+
+<style>
+    /* Aplica estilos al contenedor del gráfico */
+    #chart-container {
+        margin: 50px;
+        margin-bottom: 200px;
+    }
+</style>
 
 @if (Gastos != null && Gastos.Any())
 {
-    <Chart Config="_configuracionBarras"></Chart>
+    <div id="chart-container">
+        <Chart Config="_configuracionBarras"></Chart>
+    </div>
 }
 else
 {
@@ -29,7 +39,7 @@ else
     {
         try
         {
-            var respuesta = await repository.Get<List<Gastos>>("/api/gastos");
+            var respuesta = await repository.Get<List<Gastos>>("/api/gastos/TotalGasto");
             Gastos = respuesta.Response ?? new List<Gastos>();
         }
         catch (Exception ex)
@@ -46,9 +56,12 @@ else
                 {
                     Responsive = true,
                     Title = new OptionsTitle
+
                     {
                         Display = true,
-                        Text = "Gastos por Sigla"
+                        Text = "Gastos por Sigla",
+                        FontSize = 18,
+                        FontColor = "#000000"
                     }
                 }
             };
@@ -60,7 +73,7 @@ else
             var dataset = new BarDataset<int>(new[] { totalGastos })
                 {
                     Label = sigla,
-                    BackgroundColor = ColorUtil.ColorHexString(255,0,0),
+                    BackgroundColor = ObtenerColorPersonalizado(sigla),
                     BorderColor = ColorUtil.ColorHexString(0,0,255), // Color del borde
                     BorderWidth = 1
                 };
@@ -74,6 +87,13 @@ else
         // Lógica personalizada para asignar colores basados en la entrada
         // Puedes utilizar algún algoritmo o lógica específica
         // Devuelve un valor hexadecimal, por ejemplo: "#FF5733"
-        return "#FF5733";
+        int hashCode = input.GetHashCode();
+        var random = new Random(hashCode);
+
+        var color = $"rgba({random.Next(0, 256)}, {random.Next(0, 256)}, {random.Next(0, 256)}, 0.7)";
+        return color;
     }
+
+
+
 }
