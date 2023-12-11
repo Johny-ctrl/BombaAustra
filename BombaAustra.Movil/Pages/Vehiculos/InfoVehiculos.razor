@@ -1,0 +1,262 @@
+﻿@page "/ListVehi/Info/{SIGLA}"
+@inject IRepository repository
+@inject NavigationManager navigate
+@inject SweetAlertService swwetAlertService
+@using Microsoft.Extensions.Primitives;
+@using Newtonsoft.Json;
+@using iText.Kernel.Colors;
+@using iText.Kernel.Pdf;
+@using iText.Layout;
+@using iText.Layout.Borders;
+@using iText.Layout.Element;
+@using iText.Layout.Properties;
+@using iText.IO.Image;
+
+
+<h1 class="text-center">Informacion del vehiculo</h1>
+
+
+<div class="card">
+    <div class="card-header">
+        <i class="oi oi-info"></i> Informacion
+    </div>
+     <div class="card-body">
+        <div class="mb-2" style="display: flex; flex-wrap:wrap;">
+            <table class="table table-striped">
+                <thead>
+                    <tr class="table-bordered">
+                        <th>Sigla</th>
+                        <th>Patente</th>
+                        <th>Marca</th>
+                        <th>Revision tecnica</th>
+                        <th>Id_Modelo</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>
+                            @vehiculo?.SIGLA
+                        </td>
+                        <td>
+                            @vehiculo?.PATENTE
+                        </td>
+                        <td>
+                            @vehiculo?.MARCA
+                        </td>
+                        <td>
+                            @vehiculo?.ULTIMA_REVISION_TEC
+                        </td>
+                        <td>
+                            @vehiculo?.Modelo
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<br/>
+
+    <div class="card">
+        <div class="card-header">
+            <i class="oi oi-dollar"></i> Gastos
+        </div>
+        <div class="card-body">
+                @if (Gasto != null)
+                {
+                    <table class="table table-striped">
+                        <thead>
+                            <tr class="table-bordered">
+                                <th>SIGLA</th>
+                                <th>MONTO</th>
+                                <th>DESCRIPCION</th>
+                                <th>Fecha de Creación</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var gasto in Gasto)
+                            {
+                                <tr>
+                                    <td>@gasto.SIGLA</td>
+                                    <td>@gasto.MONTO</td>
+                                    <td>@gasto.DESCRIPCION</td>
+                                    <td>@gasto.FechaCreacion.ToString("dd/MM/yyyy")</td>
+                                </tr>
+                                
+                            }
+                        </tbody>
+                    </table>
+            decimal totalMonto = Gasto.Sum(g => g.MONTO);
+            <p>Total de Montos: @totalMonto</p>
+                }
+                else
+                {
+                    <p>No hay datos para mostrar.</p>
+                }
+
+
+        </div>
+    </div>
+<AuthorizeView Roles="AdministradorGeneral">
+    <a class="btn btn-warning" href="/ListVehi/edit/@vehiculo?.SIGLA">Editar</a>
+</AuthorizeView>
+<button class="btn btn-outline-success" @onclick="GeneratePdf">Generar PDF</button>
+@if (pdfBytes != null)
+{
+    <a href="data:application/pdf;base64,@pdfBase64" download="@vehiculo!.SIGLA" class="btn btn-outline-success"><i class="oi oi-data-transfer-download"/>Descargar PDF</a>
+}
+
+@code {
+
+    //Editar Vehiculos
+    private TipoVehiculo? vehiculo;
+    private List<TipoVehiculo>? vehiculos;
+    private List<Gastos>? Gasto { get; set; }
+    private Gastos? gasto;
+
+
+
+    private byte[]? pdfBytes;
+    private string? pdfBase64;
+
+
+    [Parameter]
+    public string SIGLA { get; set; } = null!;
+
+    [Parameter]
+    [SupplyParameterFromQuery]
+    public string Page { get; set; } = "";
+
+    [Parameter]
+    [SupplyParameterFromQuery]
+    public string Filter { get; set; } = "";
+
+
+
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadAsync();
+        await Load();
+    }
+    private async Task LoadAsync()
+    {
+        //para vehiculo
+        var responseVHttp = await repository.Get<TipoVehiculo>($"/api/TipoV/{SIGLA}");
+        if (responseVHttp.Error)
+        {
+            if (responseVHttp.HttpResponseMessage.StatusCode == System.Net.HttpStatusCode.NotFound)
+            {
+                navigate.NavigateTo("/ListVehi");
+                return;
+            }
+            var message = await responseVHttp.GetErrorMessageAsync();
+            await swwetAlertService.FireAsync("Error", message, SweetAlertIcon.Error);
+            return;
+        }
+        vehiculo = responseVHttp.Response;
+        //vehiculos = vehiculo!.SIGLA!.ToList();
+
+
+    }
+
+    private void GeneratePdf()
+    {
+
+        if (vehiculo != null)
+        {
+            using (var stream = new MemoryStream())
+            {
+                var pdf = new PdfDocument(new PdfWriter(stream));
+                var document = new Document(pdf);
+
+                // Obtener el tamaño de la página con rotación
+                //var pageSize = pdf.GetDefaultPageSize();
+                //var width = pageSize.GetWidth();
+                //var height = pageSize.GetHeight();
+                // Ruta relativa de la imagen desde la carpeta wwwroot
+                //var imagePath = "/images/logo.png";
+
+
+                // Agregar una imagen al PDF
+                //ImageData imageData = ImageDataFactory.Create(imagePath);
+                //Image image = new Image(imageData);
+
+                // Establecer la posición de la imagen en la esquina superior izquierda
+                //image.SetFixedPosition(0, height, image.GetImageWidth(), image.GetImageHeight());
+                //image.SetAutoScale(true);
+
+
+
+                // Agregar la imagen al documento
+                //document.Add(image);
+                // Aquí se puede agregar los datos específicos del usuario al PDF
+                document.Add(new Paragraph("Datos del vehiculo").SetFontSize(18));
+                document.Add(new Paragraph($"*Sigla del vehiculo: {vehiculo.SIGLA}"));
+                document.Add(new Paragraph($"*Patente: {vehiculo.PATENTE}"));
+                document.Add(new Paragraph($"*Modelo: {vehiculo.Modelo}"));
+                document.Add(new Paragraph($"*Marca: {vehiculo.MARCA}"));
+                document.Add(new Paragraph($"*Ultima revision Tecnica: {vehiculo.ULTIMA_REVISION_TEC}"));
+
+                //Parte del gasto
+                document.Add(new Paragraph("Gastos del vehiculo").SetFontSize(18));
+
+                // Crear una tabla con 2 columnas
+                Table table = new Table(3);
+
+                // Agregar encabezados de la tabla
+                Cell headerCell1 = new Cell().Add(new Paragraph("Descripción"));
+                Cell headerCell2 = new Cell().Add(new Paragraph("Monto"));
+                Cell headerCell3 = new Cell().Add(new Paragraph("Fecha de creacion"));
+                headerCell1.SetBackgroundColor(ColorConstants.LIGHT_GRAY); // Fondo gris claro
+                headerCell2.SetBackgroundColor(ColorConstants.LIGHT_GRAY);
+                headerCell3.SetBackgroundColor(ColorConstants.LIGHT_GRAY);
+                table.AddHeaderCell(headerCell1);
+                table.AddHeaderCell(headerCell2);
+                table.AddHeaderCell(headerCell3);
+                // Iterar sobre los montos y agregarlos a la tabla
+                foreach (var monto in Gasto!)
+                {
+                    Cell cell1 = new Cell().Add(new Paragraph(monto.DESCRIPCION));
+                    Cell cell2 = new Cell().Add(new Paragraph(monto.MONTO.ToString())); // Ajusta según tu modelo
+                    Cell cell3 = new Cell().Add(new Paragraph(monto.FechaCreacion.ToString("dd/MM/yyyy"))); // Ajusta según tu mode
+
+                    //agregamos las celdas
+                    table.AddCell(cell1);
+                    table.AddCell(cell2);
+                    table.AddCell(cell3);       
+                }
+                decimal totalMonto = Gasto.Sum(g => g.MONTO);
+                document.Add(new Paragraph($"Costo Total: {totalMonto.ToString()}"));
+
+                // Agregar la tabla al documento
+                document.Add(table);
+
+
+                document.Close();
+
+                pdfBytes = stream.ToArray();
+                pdfBase64 = Convert.ToBase64String(pdfBytes);
+            }
+        }
+    }
+
+    private async Task Load()
+    {
+        try
+        {
+            var responseHttp = await repository.Get<List<Gastos>>($"/api/gastos/{SIGLA}");
+            Gasto = responseHttp.Response;
+            // Aquí, 'gasto' ya es una lista de objetos Gastos
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error al cargar tipos de vehículo: {ex.Message}");
+            // Puedes manejar el error según tus necesidades
+            // Por ejemplo, mostrar un mensaje de error al usuario
+            // y/o loggear el error para su posterior análisis
+        }
+    }
+    
+}

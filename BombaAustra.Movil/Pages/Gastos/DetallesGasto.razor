@@ -1,0 +1,113 @@
+﻿@page "/Gastos/Gastoinfo/{id:int}"
+@inject IRepository repository
+@inject NavigationManager navigate
+@inject SweetAlertService swwetAlertService
+@using Microsoft.Extensions.Primitives;
+@using Newtonsoft.Json;
+@using iText.Kernel.Colors;
+@using iText.Kernel.Pdf;
+@using iText.Layout;
+@using iText.Layout.Borders;
+@using iText.Layout.Element;
+@using iText.Layout.Properties;
+@using iText.IO.Image;
+
+
+<h1 class="text-center">Informacion completa</h1>
+
+
+<div class="card">
+    <div class="card-header">
+        <i class="oi oi-info"></i> Informacion
+    </div>
+    <div class="card-body">
+        <div class="mb-2" style="display: flex; flex-wrap:wrap;">
+            <table class="table table-striped">
+                <thead>
+                    <tr class="table-bordered">
+                        <th>ID</th>
+                        <th>Sigla</th>
+                        <th>Monto</th>
+                        <th>Descripcion</th>
+                        <th>Fecha Creacion</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>
+                            @gasto?.ID_GASTO
+                        </td>
+                        <td>
+                            @gasto?.SIGLA
+                        </td>
+                        <td>
+                            @gasto?.MONTO
+                        </td>
+                        <td>
+                            @gasto?.DESCRIPCION
+                        </td>
+                        <td>
+                            @gasto?.FechaCreacion
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<br />
+
+<a href="/Gastos">Atras</a>
+
+@code {
+
+    //Editar Vehiculos
+    private Gastos? gasto;
+
+
+
+    private byte[]? pdfBytes;
+    private string? pdfBase64;
+
+
+    [Parameter]
+    public int id { get; set; }
+
+    [Parameter]
+    [SupplyParameterFromQuery]
+    public string Page { get; set; } = "";
+
+    [Parameter]
+    [SupplyParameterFromQuery]
+    public string Filter { get; set; } = "";
+
+
+
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadAsync();
+    }
+    private async Task LoadAsync()
+    {
+        //para vehiculo
+        var responseVHttp = await repository.Get<Gastos>($"/api/gastos/{id}");
+        if (responseVHttp.Error)
+        {
+            if (responseVHttp.HttpResponseMessage.StatusCode == System.Net.HttpStatusCode.NotFound)
+            {
+                navigate.NavigateTo("/ListVehi");
+                return;
+            }
+            var message = await responseVHttp.GetErrorMessageAsync();
+            await swwetAlertService.FireAsync("Error", message, SweetAlertIcon.Error);
+            return;
+        }
+        gasto = responseVHttp.Response;
+        //vehiculos = vehiculo!.SIGLA!.ToList();
+
+    }
+
+
+}

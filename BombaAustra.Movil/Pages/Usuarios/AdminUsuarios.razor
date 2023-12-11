@@ -1,0 +1,176 @@
+﻿@page "/AdminUsers"
+@using Microsoft.AspNetCore.Authorization;
+@inject IRepository repository
+@inject NavigationManager navigationManager
+@inject SweetAlertService sweetAlertService
+
+@if (Users is null)
+{
+    <div class="text-center" style="  position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);">
+        <div class="spinner-border text-success" role="status" style="height:200px; width:200px;">
+            <span class="visually-hidden">Loading...</span>
+        </div>
+    </div>
+}
+else
+{
+    <GenericList Mylist="Users">
+        <Body>
+            <div class="card conteiner">
+                <div class="card-header card1">
+                    <span>
+                        <i class="oi oi-people"></i> Usuarios
+                        <a class="btn btn-sm btn-primary float-end boton" href="/register/?IsAdmin=true"><i class="oi oi-plus"></i> Agregar Administrador</a>
+                    </span>
+                </div>
+                <div class="card-body">
+                    <div class="mb-2" style="display: flex; flex-wrap:wrap; align-items: center;">
+                        <div>
+                            <input style="width: 400px;" type="text" class="form-control" id="titulo" placeholder="Buscar usuario..." @bind-value="Filter" />
+                        </div>
+                        <div class="mx-1">
+                            <button type="button" class="btn btn-outline-primary" @onclick="ApplyFilterAsync"><i class="oi oi-layers" /> Filtrar</button>
+                            <button type="button" class="btn btn-outline-danger" @onclick="CleanFilterAsync"><i class="oi oi-ban" /> Limpiar</button>
+                        </div>
+                    </div>
+
+                    <Paginacion CurrentPage="currentPage"
+                            TotalPages="totalPages"
+                            SelectedPage="SelectedPage" />
+
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>RUT</th>
+                                <th>Nombre</th>
+                                <th>Apellido P</th>
+                                <th>Apellido M</th>
+                                <th>Correo</th>
+                                <th>Confirmado</th>
+                                <th>Tipo Usuario</th>
+                                <th>Accion</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var user in Users)
+                            {
+                                <tr>
+                                    <td>@user.ID_RUT-@user.DV_RUT</td>
+                                    <td>@user.NOMBRE</td>
+                                    <td>@user.APELLIDO_P</td>
+                                    <td>@user.APELLIDO_M</td>
+                                    <td>@user.Email</td>
+                                    <td>@user.EmailConfirmed</td>
+                                    <td>@user.Usertype</td>
+                                    <td><button class="btn btn-danger" @onclick=@(() => DeleteAsync(user.Email))>Eliminar</button></td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </Body>
+    </GenericList>
+}
+
+@code {
+    public List<Usuario>? Users { get; set; }
+    private int currentPage = 1;
+    private int totalPages;
+
+    [Parameter]
+    [SupplyParameterFromQuery]
+    public string Page { get; set; } = "";
+
+    [Parameter]
+    [SupplyParameterFromQuery]
+    public string Filter { get; set; } = "";
+
+    protected async override Task OnInitializedAsync()
+    {
+        await LoadAsync();
+    }
+
+    private async Task SelectedPage(int page)
+    {
+        currentPage = page;
+        await LoadAsync(page);
+    }
+
+    private async Task LoadAsync(int page = 1)
+    {
+        if (!string.IsNullOrWhiteSpace(Page))
+        {
+            page = Convert.ToInt32(Page);
+        }
+
+        string url1 = string.Empty;
+        string url2 = string.Empty;
+
+        if (string.IsNullOrEmpty(Filter))
+        {
+            url1 = $"api/accounts/all?page={page}";
+            url2 = $"api/accounts/totalPages";
+        }
+        else
+        {
+            url1 = $"api/accounts/all?page={page}&filter={Filter}";
+            url2 = $"api/accounts/totalPages?filter={Filter}";
+        }
+
+        try
+        {
+            var responseHppt = await repository.Get<List<Usuario>>(url1);
+            var responseHppt2 = await repository.Get<int>(url2);
+            Users = responseHppt.Response!;
+            totalPages = responseHppt2.Response!;
+        }
+        catch (Exception ex)
+        {
+            await sweetAlertService.FireAsync("Error", ex.Message, SweetAlertIcon.Error);
+        }
+    }
+
+    private async Task ApplyFilterAsync()
+    {
+        await LoadAsync();
+    }
+
+    private async Task CleanFilterAsync()
+    {
+        Filter = string.Empty;
+        await LoadAsync();
+    }
+
+    private async Task DeleteAsync(string correo)
+    {
+        var result = await sweetAlertService.FireAsync(new SweetAlertOptions
+            {
+                Title = "Atencion",
+                Text = "¿Esta seguro que decea borrar este usuario?",
+                Icon = SweetAlertIcon.Warning,
+                ShowCancelButton = true,
+                CancelButtonText = "No",
+                ConfirmButtonText = "SI"
+            });
+        var confirm = string.IsNullOrEmpty(result.Value);
+        if (confirm)
+        {
+            return;
+        }
+
+        var responseHtpp = await repository.Delete($"/api/accounts/{correo}");
+        if (responseHtpp.Error)
+        {
+            if (responseHtpp.HttpResponseMessage.StatusCode != HttpStatusCode.NotFound)
+            {
+                var message = await responseHtpp.GetErrorMessageAsync();
+                await sweetAlertService.FireAsync("Error", message, SweetAlertIcon.Error);
+                return;
+
+            }
+        }
+        await LoadAsync();
+
+    }
+}

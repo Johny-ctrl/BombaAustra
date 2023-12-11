@@ -1,0 +1,100 @@
+﻿@inject SweetAlertService sweetAlertService
+@using BombaAustra.Shared.Enums;
+
+<NavigationLock OnBeforeInternalNavigation="OnBeforeInternalNavigation" />
+
+<EditForm EditContext="editContext" OnValidSubmit="OnValidSubmit">
+    <DataAnnotationsValidator />
+    <div class="mb-3">
+        <label>Sigla:</label>
+        <div>
+            <InputText class="form-control" @bind-Value="@Vehiculo.SIGLA" />
+            <ValidationMessage For="@(() => Vehiculo.SIGLA)" />
+        </div>
+
+        <label>Patente:</label>
+        <div>
+            <InputText class="form-control" @bind-Value="@Vehiculo.PATENTE" />
+            <ValidationMessage For="@(() => Vehiculo.PATENTE)" />
+        </div>
+
+        <label>Marca:</label>
+        <div>
+            <InputText class="form-control" @bind-Value="@Vehiculo.MARCA" />
+            <ValidationMessage For="@(() => Vehiculo.MARCA)" />
+        </div>
+
+        <label>Ultima Revision:</label>
+        <div>
+            <InputDate class="form-control" @bind-Value="@Vehiculo.ULTIMA_REVISION_TEC"/>
+            <ValidationMessage For="@(() => Vehiculo.ULTIMA_REVISION_TEC)" />
+        </div>
+
+        <label>Modelo:</label>
+        <div>
+            <InputSelect class="form-control" @bind-Value="@Vehiculo.Modelo">
+                <option value="" selected>Seleccionar</option>
+           
+                @foreach (Modelos modelo in Enum.GetValues(typeof(Modelos)))
+                {
+                    <option value="@modelo"> @modelo</option>
+                }
+            </InputSelect>
+            <ValidationMessage For="@(() => Vehiculo.Modelo)" />
+        </div>
+
+    </div>
+    <button class="btn btn-primary" type="submit">Guardar cambios</button>
+    <button class="btn btn-success" @onclick="ReturnAction">Regresar</button>
+</EditForm>
+
+
+@code {
+    private EditContext editContext = null!;
+
+    [Parameter]
+    [EditorRequired]
+    public TipoVehiculo Vehiculo { get; set; } = null!;
+
+    [Parameter]
+    [EditorRequired]
+    public EventCallback OnValidSubmit { get; set; }
+
+    [Parameter]
+    [EditorRequired]
+    public EventCallback ReturnAction { get; set; }
+
+    public Boolean formPostedSucces { get; set; }
+
+    protected override void OnInitialized()
+    {
+        editContext = new(Vehiculo);
+    }
+
+    private async Task OnBeforeInternalNavigation(LocationChangingContext context)
+    {
+        var formWasModify = editContext.IsModified();
+        if (!formWasModify || formPostedSucces)
+        {
+            return;
+        }
+        var result = await sweetAlertService.FireAsync(new SweetAlertOptions
+            {
+                Title = "Confirmacion",
+                Text = "¿Desea volver y perder los cambios realizados?",
+                Icon = SweetAlertIcon.Warning,
+                ShowCancelButton = true,
+                CancelButtonText = "No",
+                ConfirmButtonText = "SI"
+            });
+        var confirm = !string.IsNullOrEmpty(result.Value);
+        if (confirm)
+        {
+            return;
+        }
+        context.PreventNavigation();
+    }
+
+
+
+}

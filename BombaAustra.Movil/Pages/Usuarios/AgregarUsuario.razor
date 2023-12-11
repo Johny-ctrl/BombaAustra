@@ -1,0 +1,123 @@
+﻿@page "/AgregarUsuario"
+@using BombaAustra.Shared.DTOs;
+@using BombaAustra.Shared.Enums;
+@using BombaAustra.Movil.Auth;
+@inject IRepository repository
+@inject SweetAlertService sweetAlertService
+@inject NavigationManager navigationManager
+@inject ILoginService loginService
+
+<h3>Registrar Nuevo Usuario</h3>
+
+<EditForm Model="userDTO" OnValidSubmit="CreteUserAsync">
+    <DataAnnotationsValidator />
+
+    <div class="card">
+        <div class="card-header">
+            <span>
+                <i class="oi oi-person" /> Registrar Nuevo  Usuario
+                <button class="btn btn-sm btn-primary float-end" type="submit"><i class="oi oi-check" /> Registrar</button>
+            </span>
+        </div>
+
+        <div class="row">
+            <div class="col-6">
+                <div class="mb-3">
+                    <label>ID RUT:</label>
+                    <div>
+                        <InputText class="form-control" @bind-Value="@userDTO.ID_RUT" />
+                        <ValidationMessage For="@(() => userDTO.ID_RUT)" />
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label>DV RUT:</label>
+                    <div>
+                        <InputText class="form-control" @bind-Value="@userDTO.DV_RUT" />
+                        <ValidationMessage For="@(() => userDTO.DV_RUT)" />
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label>Nombre:</label>
+                    <div>
+                        <InputText class="form-control" @bind-Value="@userDTO.NOMBRE" />
+                        <ValidationMessage For="@(() => userDTO.NOMBRE)" />
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label>Apellido P:</label>
+                    <div>
+                        <InputText class="form-control" @bind-Value="@userDTO.APELLIDO_P" />
+                        <ValidationMessage For="@(() => userDTO.APELLIDO_P)" />
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label>Apellido M:</label>
+                    <div>
+                        <InputText class="form-control" @bind-Value="@userDTO.APELLIDO_M" />
+                        <ValidationMessage For="@(() => userDTO.APELLIDO_M)" />
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label>Email:</label>
+                    <div>
+                        <InputText class="form-control" @bind-Value="@userDTO.Email" />
+                        <ValidationMessage For="@(() => userDTO.Email)" />
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label>Tipo de usuario:</label>
+                    <div>
+                        <InputSelect class="form-control" @bind-Value="@userDTO.Usertype">
+
+                            <option>Seleccionar</option>
+
+                            @foreach (UserType type in Enum.GetValues(typeof(UserType)))
+                            {
+                                <option value="@type"> @type</option>
+                            }
+                        </InputSelect>
+                        <ValidationMessage For="@(() => userDTO.Usertype)" />
+                    </div>
+                </div>
+            </div>
+            <div class="col-6">
+                <div class="mb-3">
+                    <label>Contraseña:</label>
+                    <div>
+                        <InputText type="password" class="form-control" @bind-Value="@userDTO.Password" />
+                        <ValidationMessage For="@(() => userDTO.Password)" />
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label>Confirmación de contraseña:</label>
+                    <div>
+                        <InputText type="password" class="form-control" @bind-Value="@userDTO.PasswordConfirm" />
+                        <ValidationMessage For="@(() => userDTO.PasswordConfirm)" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</EditForm>
+
+
+@code {
+    private UserDTO userDTO = new();
+
+
+    private async Task CreteUserAsync()
+    {
+
+        userDTO.UserName = userDTO.Email;
+        var responseHttp = await repository.Post<UserDTO>("/api/accounts/CreateUser", userDTO);
+        if (responseHttp.Error)
+        {
+            var message = await responseHttp.GetErrorMessageAsync();
+            await sweetAlertService.FireAsync("Error", message, SweetAlertIcon.Error);
+            return;
+        }
+
+        await sweetAlertService.FireAsync("Confirmación", "La cuenta ha sido creada con éxito. Se ha enviado un correo electrónico con las instrucciones para activar la activacion de la cuenta.", SweetAlertIcon.Info);
+        navigationManager.NavigateTo("/Inicio");
+    }
+}

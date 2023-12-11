@@ -1,0 +1,131 @@
+﻿@inject SweetAlertService sweetAlertService
+@inject IRepository repository
+
+<NavigationLock OnBeforeInternalNavigation="OnBeforeInternalNavigation" />
+
+<EditForm EditContext="editContext" OnValidSubmit="OnValidSubmitHandler">
+    <DataAnnotationsValidator />
+    <div class="mb-3">
+
+        <label>Sigla del vehiculo:</label>
+        <div>
+            @if (vehiculos != null && vehiculos.Any())
+            {
+                <InputSelect class="form-control" @bind-Value="@Gasto.SIGLA">
+                    <option>Seleccionar</option>
+                    @foreach (var tipoVehiculo in vehiculos)
+                    {
+                        <option value="@tipoVehiculo.SIGLA"> @tipoVehiculo.SIGLA</option>
+                    }
+                </InputSelect>
+            }
+            else
+            {
+                <p>No existen siglas de vehículos disponibles.</p>
+            }
+            <ValidationMessage For="@(() => Gasto.SIGLA)"/>
+        </div>
+
+        <label>Monto utilizado:</label>
+        <div>
+            <InputNumber class="form-control" @bind-Value="@Gasto.MONTO" />
+            <ValidationMessage For="@(() => Gasto.MONTO)" />
+        </div>
+
+        <label>Escriba aqui que fue lo que se hizo</label>
+        <div>
+            <InputTextArea class="form-control" @bind-Value="@Gasto.DESCRIPCION" />
+            <ValidationMessage For="@(() => Gasto.DESCRIPCION)" />
+        </div>
+    </div>
+    <button class="btn btn-primary" type="submit">Agregar</button>
+    <button class="btn btn-success" @onclick="ReturnAction">Regresar</button>
+</EditForm>
+
+
+@code {
+    private EditContext editContext = null!;
+
+    [Parameter]
+    [EditorRequired]
+    public Gastos Gasto { get; set; } = null!;
+
+    private List<TipoVehiculo>? vehiculos { get; set; } = new List<TipoVehiculo>();
+
+    public List<Gastos> gastos { get; set; } = null!;
+
+
+    [Parameter]
+    [EditorRequired]
+    public EventCallback OnValidSubmit { get; set; }
+
+    [Parameter]
+    [EditorRequired]
+    public EventCallback ReturnAction { get; set; }
+
+    public Boolean formPostedSucces { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        editContext = new EditContext(Gasto);
+        await Load();
+    }
+
+    private async Task OnBeforeInternalNavigation(LocationChangingContext context)
+    {
+        var formWasModify = editContext.IsModified();
+        if (!formWasModify || formPostedSucces)
+        {
+            return;
+        }
+        var result = await sweetAlertService.FireAsync(new SweetAlertOptions
+            {
+                Title = "Confirmacion",
+                Text = "¿Desea volver y perder los cambios realizados?",
+                Icon = SweetAlertIcon.Warning,
+                ShowCancelButton = true,
+                CancelButtonText = "No",
+                ConfirmButtonText = "SI"
+            });
+        var confirm = !string.IsNullOrEmpty(result.Value);
+        if (confirm)
+        {
+            return;
+        }
+        context.PreventNavigation();
+    }
+
+    private async Task Load()
+    {
+        try
+        {
+            var responseHttp = await repository.Get<List<TipoVehiculo>>("/api/TipoV");
+            vehiculos = responseHttp.Response ?? new List<TipoVehiculo>();
+
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error al cargar tipos de vehículo: {ex.Message}");
+            // Puedes manejar el error según tus necesidades
+            // Por ejemplo, mostrar un mensaje de error al usuario
+            // y/o loggear el error para su posterior análisis
+        }
+
+
+    }
+
+        private async Task OnValidSubmitHandler()
+    {
+        // Asigna la fecha actual
+        Gasto.FechaCreacion = DateTime.Now;
+
+        // Realiza otras operaciones necesarias, como guardar en la base de datos
+
+        // Dispara el evento de éxito o realiza la lógica deseada
+        await OnValidSubmit.InvokeAsync();
+    }
+
+
+
+
+}

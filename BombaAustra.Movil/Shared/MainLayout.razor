@@ -1,17 +1,22 @@
 ﻿@inherits LayoutComponentBase
 
-<div class="page">
-    <div class="sidebar">
-        <NavMenu />
-    </div>
 
+<div class="page">
+    <AuthorizeView>
+        <div class="sidebar">
+            <NavMenu />
+        </div>
+    </AuthorizeView>
     <main>
-        <div class="top-row px-4">
-            <a href="https://docs.microsoft.com/aspnet/" target="_blank">About</a>
+        <div class="top-row px-4" style="display: flex; flex-wrap:wrap; background-color: darkblue; border-bottom: 2px solid yellow;">
+            <AuthLinks />
         </div>
 
-        <article class="content px-4">
+        <article>
             @Body
         </article>
     </main>
+
+
+    <Footer/>
 </div>

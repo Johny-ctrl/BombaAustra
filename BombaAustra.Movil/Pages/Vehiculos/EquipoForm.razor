@@ -1,0 +1,80 @@
+﻿@using BombaAustra.Shared.Enums;
+@inject SweetAlertService sweetAlertService
+
+
+<NavigationLock OnBeforeInternalNavigation="OnBeforeInternalNavigation" />
+
+<EditForm EditContext="editContext" OnValidSubmit="OnValidSubmit">
+    <DataAnnotationsValidator />
+
+    <div class="mb-3">
+
+        <label>Tipó Equipo:</label>
+        <div>
+             <InputSelect class="form-control" @bind-Value="@Equipos.TIPO_EQUIPO">
+                <option>Seleccionar</option>
+                @foreach (TiposEquipo type in Enum.GetValues(typeof(TiposEquipo)))
+                {
+                  <option value="@type"> @type</option>
+                }
+            </InputSelect>
+            <ValidationMessage For="@(() => Equipos.TIPO_EQUIPO)" />
+        </div>
+
+        <label>Nombre Equipo:</label>
+        <div>
+            <InputText class="form-control" @bind-Value="@Equipos.NOMBRE_EQUIPO" />
+            <ValidationMessage For="@(() => Equipos.NOMBRE_EQUIPO)" />
+        </div>
+
+    </div>
+    <button class="btn btn-primary" type="submit">Guardar cambios</button>
+    <button class="btn btn-success" @onclick="ReturnAction">Regresar</button>
+</EditForm>
+
+@code {
+    private EditContext editContext = null!;
+
+    [Parameter]
+    [EditorRequired]
+    public Equipo Equipos { get; set; } = null!;
+
+    [Parameter]
+    [EditorRequired]
+    public EventCallback OnValidSubmit { get; set; }
+
+    [Parameter]
+    [EditorRequired]
+    public EventCallback ReturnAction { get; set; }
+
+    public Boolean formPostedSucces { get; set; }
+
+    protected override void OnInitialized()
+    {
+        editContext = new(Equipos);
+    }
+
+    private async Task OnBeforeInternalNavigation(LocationChangingContext context)
+    {
+        var formWasModify = editContext.IsModified();
+        if (!formWasModify || formPostedSucces)
+        {
+            return;
+        }
+        var result = await sweetAlertService.FireAsync(new SweetAlertOptions
+            {
+                Title = "Confirmacion",
+                Text = "¿Desea volver y perder los cambios realizados?",
+                Icon = SweetAlertIcon.Warning,
+                ShowCancelButton = true,
+                CancelButtonText = "No",
+                ConfirmButtonText = "SI"
+            });
+        var confirm = !string.IsNullOrEmpty(result.Value);
+        if (confirm)
+        {
+            return;
+        }
+        context.PreventNavigation();
+    }
+}

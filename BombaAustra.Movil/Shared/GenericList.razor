@@ -1,0 +1,51 @@
+﻿@typeparam Titem
+
+@if(Mylist is null)
+{
+    @if(Loading is null)
+    {
+        <div style="position: fixed; top: 50%; left: 50%;">
+            <div class="spinner-border text-success" role="status" style="height:200px; width:200px;">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+        </div>
+    }
+    else
+    {
+        @Loading
+    }
+}else if(Mylist.Count == 0)
+{ 
+    @if(NoRecords is null)
+    {
+        <div class="align-items-center">
+            <p>No existen registros!</p>
+        </div>
+    }
+    else
+    {
+        @NoRecords
+    }
+
+}
+else
+{
+    @Body
+}
+
+@code {
+    [Parameter]
+    public RenderFragment? Loading { get; set; } //<-- Se pasa un pedazo de codigo de razor, este sirve para generar pantallas de cargas
+
+    [Parameter]
+    public RenderFragment? NoRecords { get; set; }  //<-- se usa cuando no se encuentran registros
+
+    [Parameter]
+    [EditorRequired]
+    public RenderFragment Body { get; set; } = null!;
+
+    [Parameter]
+    [EditorRequired]
+    public List<Titem> Mylist { get; set; } = null!;
+
+}

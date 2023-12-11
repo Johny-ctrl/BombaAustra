@@ -1,0 +1,79 @@
+﻿@page "/Graficos"
+@using ChartJs.Blazor.BarChart
+@using ChartJs.Blazor.Util
+@inject IRepository repository
+@inject NavigationManager Navigation
+
+<h3>Gráfico de Barras</h3>
+
+@if (Gastos != null && Gastos.Any())
+{
+    <Chart Config="_configuracionBarras"></Chart>
+}
+else
+{
+    <p>No hay datos de gastos disponibles.</p>
+}
+
+@code {
+    private BarConfig? _configuracionBarras;
+    private List<Gastos>? Gastos;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await CargarDatosAsync();
+        ConfigurarGraficoBarras();
+    }
+
+    private async Task CargarDatosAsync()
+    {
+        try
+        {
+            var respuesta = await repository.Get<List<Gastos>>("/api/gastos");
+            Gastos = respuesta.Response ?? new List<Gastos>();
+        }
+        catch (Exception ex)
+        {
+            Console.Error.WriteLine($"Error al cargar datos: {ex.Message}");
+        }
+    }
+
+    private void ConfigurarGraficoBarras()
+    {
+        _configuracionBarras = new BarConfig
+            {
+                Options = new BarOptions
+                {
+                    Responsive = true,
+                    Title = new OptionsTitle
+                    {
+                        Display = true,
+                        Text = "Gastos por Sigla"
+                    }
+                }
+            };
+
+        foreach (var sigla in Gastos.Select(g => g.SIGLA).Distinct())
+        {
+            var totalGastos = Gastos.Where(g => g.SIGLA == sigla).Sum(g => g.MONTO);
+
+            var dataset = new BarDataset<int>(new[] { totalGastos })
+                {
+                    Label = sigla,
+                    BackgroundColor = ColorUtil.ColorHexString(255,0,0),
+                    BorderColor = ColorUtil.ColorHexString(0,0,255), // Color del borde
+                    BorderWidth = 1
+                };
+
+            _configuracionBarras.Data.Datasets.Add(dataset);
+        }
+    }
+
+    private string ObtenerColorPersonalizado(string input)
+    {
+        // Lógica personalizada para asignar colores basados en la entrada
+        // Puedes utilizar algún algoritmo o lógica específica
+        // Devuelve un valor hexadecimal, por ejemplo: "#FF5733"
+        return "#FF5733";
+    }
+}

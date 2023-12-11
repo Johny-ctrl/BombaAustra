@@ -17,7 +17,7 @@
 
         <!-- App Identifier -->
         <ApplicationId>com.companyname.bombaaustra.movil</ApplicationId>
-        <ApplicationIdGuid>77B8E46A-44CB-4EE7-A752-02643CC6B236</ApplicationIdGuid>
+        <ApplicationIdGuid>18600312-2C91-45F3-9E40-EFFC1A6D21E3</ApplicationIdGuid>
 
         <!-- Versions -->
         <ApplicationDisplayVersion>1.0</ApplicationDisplayVersion>
@@ -50,16 +50,34 @@
     </ItemGroup>
 
     <ItemGroup>
+      <Content Remove="Pages\Usuarios\AgregarUsuario.razor" />
+      <Content Remove="Pages\Usuarios\ConfUsers.razor" />
+      <Content Remove="Pages\Usuarios\ModificarUsuario.razor" />
+      <Content Remove="Pages\Usuarios\UsuarioForm.razor" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Remove="Pages\Usuarios\AgregarUsuario.razor.css" />
+    </ItemGroup>
+
+    <ItemGroup>
         <PackageReference Include="ChartJs.Blazor.Fork" Version="2.0.2" />
         <PackageReference Include="CurrieTechnologies.Razor.SweetAlert2" Version="5.5.0" />
         <PackageReference Include="itext7" Version="8.0.2" />
         <PackageReference Include="itext7.bouncy-castle-adapter" Version="8.0.2" />
+        <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="7.0.11" />
+        <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Authentication" Version="7.0.13" />
         <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="7.0.11" />
         <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="7.0.0" />
-        <PackageReference Include="MySql.Data" Version="8.2.0" />
-        <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="7.0.3" />
+		<PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="7.0.1" />
+		<PackageReference Include="MySql.Data" Version="8.1.0" />
+		<PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="7.0.3" />
     </ItemGroup>
 
+	<ItemGroup>
+		<ProjectReference Include="..\BombaAustra.Shared\BombaAustra.Shared.csproj" />
+	</ItemGroup>
+	
     <ItemGroup>
       <Folder Include="Pages\" />
     </ItemGroup>

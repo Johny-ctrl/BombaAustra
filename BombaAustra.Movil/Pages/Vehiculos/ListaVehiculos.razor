@@ -1,0 +1,326 @@
+﻿@page "/ListVehi"
+@inject IRepository repository
+@inject NavigationManager Navigation
+@inject SweetAlertService sweetAlertService
+@inject IJSRuntime JS
+@using iText.Layout.Element;
+@using iText.Layout;
+
+<h3 class="text-center" style="margin: 20px auto;">Lista de vehiculos y Equipos</h3>
+
+<div class="text-center">
+    <img src="/images/Logo_camion.png" style="height:90px; width:90px;" />
+</div>
+
+<div class="card">
+    <div class="card-header card1">
+
+        <i class="oi oi-calculator"></i> Opciones
+        <AuthorizeView Roles="AdministradorGeneral">
+            <a class="btn btn-sm btn-primary float-end boton" href="/ListVehi/AddVehi"><i class="oi oi-plus" /> Nuevo Vehiculo</a>
+            <a class="btn btn-sm btn-primary float-end boton" href="/ListVehi/AgregarEqui"><i class="oi oi-plus" /> Nuevo Equipo</a>
+        </AuthorizeView>
+    </div>
+    <div class="card-body">
+        <div class="mb-2" style="display: flex; flex-wrap:wrap; align-items: center;">
+            <div class="text-center" style="display: flex; flex-wrap:wrap;">
+                <div>
+                    <input style="width: 400px;" type="text" class="form-control" id="titulo" placeholder="Buscar Equipo o vehiculo..." @bind-value="Filter" />
+                </div>
+                <div class="mx-1" >
+                    <button type="button" class="btn btn-outline-primary" @onclick="ApplyFilterAsync"><i class="oi oi-layers" /> Filtrar</button>
+                    <button type="button" class="btn btn-outline-danger" @onclick="CleanFilterAsync"><i class="oi oi-ban" /> Limpiar</button>
+                </div>
+                <div class="float-end">
+                    <Paginacion CurrentPage="currentPage"
+                                TotalPages="totalPages"
+                                SelectedPage="SelectedPageAsync" />
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+</div>
+
+@if (vehiculos is null)
+{
+    <div style="position: fixed; top: 50%; left: 50%;">
+        <div class="spinner-border text-success" role="status" style="height:200px; width:200px;">
+            <span class="visually-hidden">Loading...</span>
+        </div>
+    </div>
+}
+else
+{
+
+    <h3 style="margin: 20px auto;">Equipos</h3>
+
+    <GenericList Mylist="Equipos">
+        <Body>
+            <div class="card">
+                <div class="card-body">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr class="table-bordered card1">
+                                <th>Id</th>
+                                <th>Nombre</th>
+                                <th>Tipo</th>
+                                <AuthorizeView Roles="AdministradorGeneral">
+                                    <th>Acciones</th>
+                                </AuthorizeView>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var equipo in Equipos!)
+                            {
+                                <tr>
+                                    <td>
+                                        @equipo.ID_EQUIPO
+                                    </td>
+                                    <td>
+                                        @equipo.NOMBRE_EQUIPO
+
+                                    </td>
+                                    <td>
+                                        @equipo.TIPO_EQUIPO
+                                    </td>
+                                    <AuthorizeView Roles="AdministradorGeneral">
+                                    <td>
+                                        <button class="btn btn-danger" @onclick=@(() => DeleteEAsync(equipo.ID_EQUIPO))>Eliminar</button>
+                                    </td>
+                                    </AuthorizeView>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </Body>
+    </GenericList>
+
+    <br/>
+
+    <h3 style="margin: 20px auto;">Vehiculos</h3>
+
+
+
+    <GenericList Mylist="vehiculos">
+        <Body>
+            <div class="card">
+                <div class="card-body">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr class="table-bordered card1">
+                                <th>Sigla</th>
+                                <th>Patente</th>
+                                <th>Marca</th>
+                                <th>Revision tecnica</th>
+                                <th>Modelo</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var vehiculo in vehiculos!)
+                            {
+                                <tr>
+                                    <td>
+                                        @vehiculo.SIGLA
+                                    </td>
+                                    <td>
+                                        @vehiculo.PATENTE
+                                    </td>
+                                    <td>
+                                        @vehiculo.MARCA
+                                    </td>
+                                    <td>
+                                        @vehiculo.ULTIMA_REVISION_TEC
+                                    </td>
+                                    <td>
+                                        @vehiculo.Modelo
+                                    </td>
+                                    <td>
+                                        <AuthorizeView Roles="AdministradorGeneral">
+                                        <a class="btn btn-warning" href="/ListVehi/edit/@vehiculo.SIGLA">Editar</a>
+                                        <button class="btn btn-danger" @onclick=@(() => DeleteAsync(vehiculo.SIGLA))>Eliminar</button>
+                                        </AuthorizeView>
+                                        <a class="btn btn-success" href="/ListVehi/Info/@vehiculo.SIGLA">Detalles</a>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </Body>
+    </GenericList>
+}
+
+
+
+@code {
+
+    private byte[]? pdfBytes;
+    private string? pdfBase64;
+
+    [Parameter]
+    [SupplyParameterFromQuery]
+    public string Page { get; set; } = string.Empty;
+
+    [Parameter]
+    [SupplyParameterFromQuery]
+    public string Filter { get; set; } = string.Empty;
+
+
+    private List<Equipo>? Equipos { get; set; }
+    private List<TipoVehiculo>? vehiculos { get; set; }
+    private int currentPage = 1;
+    private int totalPages;
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadAsync();
+    }
+
+    private async Task SelectedPageAsync(int page)
+    {
+        currentPage = page;
+        await LoadAsync(page);
+
+    }
+
+
+    private async Task LoadAsync(int page = 1)
+    {
+        if (!string.IsNullOrWhiteSpace(Page))
+        {
+            page = Convert.ToInt32(Page);
+        }
+
+        string url1 = string.Empty;
+        string url2 = string.Empty;
+        string url3 = string.Empty;
+        string url4 = string.Empty;
+
+        if (string.IsNullOrEmpty(Filter))
+        {
+            url1 = $"api/TipoV?page={page}";
+            url2 = $"api/TipoV/totalPages";
+            url3 = $"api/Equipos?page={page}";
+            url4 = $"api/Equipos/totalPages";
+        }
+        else
+        {
+            url1 = $"api/TipoV?page={page}&filter={Filter}";
+            url2 = $"api/TipoV/totalPages?filter={Filter}";
+            url3 = $"api/Equipos?page={page}&filter={Filter}";
+            url4 = $"api/Equipo/totalPages?filter={Filter}";
+        }
+
+        try
+        {
+            var EquipoResponse = await repository.Get<List<Equipo>>(url3);//Devuelve la lista de Equipo
+            var EquipoResponse2 = await repository.Get<int>(url4);
+            Equipos = EquipoResponse.Response;
+            totalPages = EquipoResponse2.Response;
+
+            var vehiculoEResponse = await repository.Get<List<TipoVehiculo>>(url1);
+            var vehiculoEResponse2 = await repository.Get<int>(url2);
+            vehiculos = vehiculoEResponse.Response!;
+            totalPages = vehiculoEResponse2.Response!;
+        }
+        catch (Exception ex)
+        {
+            await sweetAlertService.FireAsync("Error", ex.Message, SweetAlertIcon.Error);
+        }
+
+    }
+
+    private async Task DeleteAsync(string SIGLA)
+    {
+        var result = await sweetAlertService.FireAsync(new SweetAlertOptions
+            {
+                Title = "Atencion",
+                Text = "¿Esta seguro que decea borrar este vehiculo?",
+                Icon = SweetAlertIcon.Warning,
+                ShowCancelButton = true,
+                CancelButtonText = "No",
+                ConfirmButtonText = "SI"
+            });
+        var confirm = string.IsNullOrEmpty(result.Value);
+        if (confirm)
+        {
+            return;
+        }
+
+        var responseHtpp = await repository.Delete($"/api/TipoV/{SIGLA}");
+        if (responseHtpp.Error)
+        {
+            if (responseHtpp.HttpResponseMessage.StatusCode != HttpStatusCode.NotFound)
+            {
+                var message = await responseHtpp.GetErrorMessageAsync();
+                await sweetAlertService.FireAsync("Error", message, SweetAlertIcon.Error);
+                return;
+
+            }
+        }
+        await LoadAsync();
+
+    }
+
+    private async Task DeleteEAsync(int ID)
+    {
+        var result = await sweetAlertService.FireAsync(new SweetAlertOptions
+            {
+                Title = "Atencion",
+                Text = "¿Esta seguro que decea borrar este vehiculo?",
+                Icon = SweetAlertIcon.Warning,
+                ShowCancelButton = true,
+                CancelButtonText = "No",
+                ConfirmButtonText = "SI"
+            });
+        var confirm = string.IsNullOrEmpty(result.Value);
+        if (confirm)
+        {
+            return;
+        }
+
+        var responseEHtpp = await repository.Delete($"/api/Equipos/{ID}");
+        if (responseEHtpp.Error)
+        {
+            if (responseEHtpp.HttpResponseMessage.StatusCode != HttpStatusCode.NotFound)
+            {
+                var message = await responseEHtpp.GetErrorMessageAsync();
+                await sweetAlertService.FireAsync("Error", message, SweetAlertIcon.Error);
+                return;
+            }
+        }
+
+        await LoadAsync();
+
+    }
+    private async Task CleanFilterAsync()
+    {
+        Filter = string.Empty;
+        await ApplyFilterAsync();
+    }
+
+    private async Task ApplyFilterAsync()
+    {
+        int page = 1;
+        await LoadAsync(page);
+        await SelectedPageAsync(page);
+    }
+
+    private async Task export()
+    {
+
+        await JS.InvokeVoidAsync("GenerarPDF");
+
+    }
+
+
+
+
+}

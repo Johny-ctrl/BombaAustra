@@ -1,0 +1,35 @@
+﻿@page "/ListVehi/AgregarEqui"
+@inject NavigationManager navigation
+@inject SweetAlertService sweetAlertService
+@inject IRepository repositorio
+
+
+<EquipoForm @ref="equipoForm" Equipos="equipo" OnValidSubmit="Create"
+              ReturnAction="Return" />
+
+@code {
+    private Equipo equipo = new();
+    private EquipoForm? equipoForm;
+
+    private async Task Create()
+    {
+        var httpResponse = await repositorio.Post("/api/Equipos", equipo);
+        if (httpResponse.Error)
+        {
+            var message = await httpResponse.GetErrorMessageAsync();
+            await sweetAlertService.FireAsync("Error", "Los datos son invalidos o faltan por rellenar");
+            return;
+        }
+        equipoForm!.formPostedSucces = true;
+        navigation.NavigateTo("/ListVehi");
+
+    }
+
+    private void Return()
+    {
+        equipoForm!.formPostedSucces = true;
+        navigation.NavigateTo("/ListVehi");
+
+    }
+
+}

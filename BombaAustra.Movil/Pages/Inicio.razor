@@ -1,0 +1,169 @@
+﻿@page "/Inicio"
+@using Microsoft.AspNetCore.Authorization;
+@inject IRepository repository
+@inject NavigationManager Navigation
+
+<header>
+    <h3 class="text-center">Bienvenido!</h3>
+</header>
+<div class="text-center" style="padding:3px;">
+    <img src="https://www.shareicon.net/data/512x512/2015/09/23/106239_user_512x512.png" class="card-img" style="height:150px; width:150px;"/>
+</div>
+<body>
+    <div class="text-center">
+        <button @onclick="EstadoVehiculos" class="btn btn-success boton">Lista Vehiculo</button>
+        <AuthorizeView Roles="AdministradorGeneral,AdministradorCompañia boton">
+            <button @onclick="AdminUsers" class="btn btn-success boton" >Administrar usuarios</button>
+            <button @onclick="AddUsers" class="btn btn-success boton" >Agregar Usuario</button>
+        </AuthorizeView>
+        <button @onclick="Gastos" class="btn btn-success boton">Perfil Costos</button>
+        <button @onclick="Grafico" class="boton">Perfil de graficos</button> 
+
+
+
+    </div>
+
+    <div class="card">
+        <div class="card-header">
+            <i class="oi oi-bell"></i> Notificaciones
+        </div>
+        <div class="card-body">
+            @if (vehiculo != null)
+            {
+                // Agrega esta línea para imprimir la cantidad de vehículos antes de aplicar el filtro
+                <p>Cantidad de vehículos antes del filtro: @vehiculo.Count</p>
+
+                var fechaLimiteSuperior = DateTime.Now.AddDays(5);
+                var fechaLimiteInferior = DateTime.Now;
+
+                var vehiculosProximos = vehiculo
+                .Where(v =>  v.ULTIMA_REVISION_TEC <= fechaLimiteSuperior);
+
+                // ...
+
+
+                // Agrega esta línea para imprimir la cantidad de vehículos después del filtro
+                <p>Cantidad de vehículos después del filtro: @vehiculosProximos.Count()</p>
+            
+
+                if (vehiculosProximos.Any())
+                {
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Sigla</th>
+                                <th>Mensaje</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var vehiculoProximo in vehiculosProximos)
+                            {
+                                <tr>
+                                    <td>@vehiculoProximo.SIGLA</td>
+                                    <td>
+                                        @if (vehiculoProximo.ULTIMA_REVISION_TEC >= fechaLimiteInferior && vehiculoProximo.ULTIMA_REVISION_TEC <= fechaLimiteSuperior)//esta kgada gano xd
+                                        {
+                                            <span>Próximo a revisión técnica</span>
+                                        }
+                                        else if (vehiculoProximo.ULTIMA_REVISION_TEC < fechaLimiteInferior)
+                                        {
+                                            <span>Atrasado en revisión técnica</span>
+                                        }
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                }
+                else
+                {
+                    <div class="text-center">
+                        <p>No hay vehículos próximos o atrasados en la revisión técnica.</p>
+                    </div>
+                }
+            }
+
+        </div>
+    </div>
+
+    <div class="carousel-container">
+        <div class="carousel">
+            <img src="/images/logo.png" alt="Logo 1"/>
+            <img src="/images/bbc.png" alt="BBC" />
+            <img src="/images/bbm.png" alt="BBM" />
+            <img src="/images/bbn.png" alt="BBN" />
+            <img src="/images/eez.png" alt="EEZ" />
+            <img src="/images/eex.png" alt="EEX" />
+            <img src="/images/logo.png" alt="Logo 2" />
+            <!-- Agrega más imágenes según sea necesario -->
+        </div>
+    </div>
+
+
+    
+
+
+
+
+</body>
+@code {
+    private List<TipoVehiculo>? vehiculo;
+
+    public void EstadoVehiculos()
+    {
+        Navigation.NavigateTo("/ListVehi");
+    }
+
+    public void Reportes()
+    {
+        Navigation.NavigateTo("/Reportes");
+    }
+
+    public void AdminUsers()
+    {
+        Navigation.NavigateTo("/AdminUsers");
+    }
+
+    public void AddUsers()
+    {
+        Navigation.NavigateTo("/Register");
+    }
+
+    public void Gastos()
+    {
+        Navigation.NavigateTo("/Gastos");
+    }
+
+    public void PDF()
+    {
+        Navigation.NavigateTo("/generate-pdf");
+    }
+
+    public void Grafico()
+    {
+        Navigation.NavigateTo("/Graficos");
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await Load();
+    }
+    //obtener lista de vehiculos
+    private async Task Load()
+    {
+        try
+        {
+            var responseHttp = await repository.Get<List<TipoVehiculo>>("/api/TipoV/TotalVehiculos");
+            vehiculo = responseHttp.Response;
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error al cargar la lista de vehículo: {ex.Message}");
+            // Puedes manejar el error según tus necesidades
+            // Por ejemplo, mostrar un mensaje de error al usuario
+            // y/o loggear el error para su posterior análisis
+        }
+    }
+
+
+}

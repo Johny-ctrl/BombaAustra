@@ -1,0 +1,19 @@
+﻿@page "/ini"
+
+<PageTitle>Index</PageTitle>
+
+<AuthorizeView Roles="AdministradorGeneral">
+    <Authorized>
+        <p>Estas autenticado  y autorizado, @context.User.Identity?.Name</p>
+    </Authorized>
+    <NotAuthorized>
+        <p>No estas autorizado</p>
+    </NotAuthorized>
+</AuthorizeView>
+
+
+<h1>Hello, world!</h1>
+
+Welcome to your new app.
+
+<SurveyPrompt Title="How is Blazor working for you?" />
