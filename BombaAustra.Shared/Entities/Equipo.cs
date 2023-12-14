@@ -11,6 +11,8 @@ namespace BombaAustra.Shared.Entities
 {
     public class Equipo
     {
+        public int Cantidad { get; set; }
+
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int ID_EQUIPO {  get; set; }

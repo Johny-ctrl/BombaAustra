@@ -20,7 +20,11 @@
             </InputSelect>
             <ValidationMessage For="@(() => Equipos.TIPO_EQUIPO)" />
         </div>
-
+        <label>Cantidad:</label>
+            <div>
+                <InputNumber class="form-control" @bind-Value="@Equipos.Cantidad"/>
+                <ValidationMessage For="@(() => Equipos.Cantidad)" />    
+            </div>
         <label>Nombre Equipo:</label>
         <div>
             <InputText class="form-control" @bind-Value="@Equipos.NOMBRE_EQUIPO" />

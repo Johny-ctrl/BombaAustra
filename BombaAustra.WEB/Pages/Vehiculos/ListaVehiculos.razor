@@ -63,7 +63,7 @@ else
                     <table class="table table-striped">
                         <thead>
                             <tr class="table-bordered card1">
-                                <th>Id</th>
+                                <th>Cantidad actual</th>
                                 <th>Nombre</th>
                                 <th>Tipo</th>
                                 <AuthorizeView Roles="AdministradorGeneral">
@@ -76,7 +76,7 @@ else
                             {
                                 <tr>
                                     <td>
-                                        @equipo.ID_EQUIPO
+                                        @equipo.Cantidad
                                     </td>
                                     <td>
                                         @equipo.NOMBRE_EQUIPO
@@ -85,11 +85,14 @@ else
                                     <td>
                                         @equipo.TIPO_EQUIPO
                                     </td>
-                                    <AuthorizeView Roles="AdministradorGeneral">
+                                    
                                     <td>
-                                        <button class="btn btn-danger" @onclick=@(() => DeleteEAsync(equipo.ID_EQUIPO))>Eliminar</button>
+                                        <AuthorizeView Roles="AdministradorGeneral">
+                                            <button class="btn btn-danger" @onclick=@(() => DeleteEAsync(equipo.ID_EQUIPO))>Eliminar</button>
+                                        </AuthorizeView>
+                                        <a class="btn btn-warning" href="/ListVehi/editarEquipo/@equipo.ID_EQUIPO">Editar</a>
                                     </td>
-                                    </AuthorizeView>
+                                    
                                 </tr>
                             }
                         </tbody>
