@@ -66,6 +66,8 @@ else
                                 <th>Cantidad actual</th>
                                 <th>Nombre</th>
                                 <th>Tipo</th>
+                                <th>Fecha Ingreso</th>
+                                <th>Fecha Caducidad</th> <!--Por temas de seguridad se pone una fecha maxima de 3 años-->
                                 <AuthorizeView Roles="AdministradorGeneral">
                                     <th>Acciones</th>
                                 </AuthorizeView>
@@ -85,7 +87,12 @@ else
                                     <td>
                                         @equipo.TIPO_EQUIPO
                                     </td>
-                                    
+                                    <td>
+                                        @equipo.FECHA_INGRESO.ToString("dd/MM/yyyy")
+                                    </td>
+                                    <td>
+                                        @equipo.FECHA_ESTIMADO.ToString("dd/MM/yyyy")
+                                    </td>
                                     <td>
                                         <AuthorizeView Roles="AdministradorGeneral">
                                             <button class="btn btn-danger" @onclick=@(() => DeleteEAsync(equipo.ID_EQUIPO))>Eliminar</button>
@@ -137,7 +144,7 @@ else
                                         @vehiculo.MARCA
                                     </td>
                                     <td>
-                                        @vehiculo.ULTIMA_REVISION_TEC
+                                        @vehiculo.ULTIMA_REVISION_TEC.ToString("dd/MM/yyyy")
                                     </td>
                                     <td>
                                         @vehiculo.Modelo

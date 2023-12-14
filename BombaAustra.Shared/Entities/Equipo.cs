@@ -11,6 +11,10 @@ namespace BombaAustra.Shared.Entities
 {
     public class Equipo
     {
+        public DateTime FECHA_ESTIMADO { get; set; }
+
+        public DateTime FECHA_INGRESO {  get; set; } =  DateTime.Now;
+
         public int Cantidad { get; set; }
 
         [Key]

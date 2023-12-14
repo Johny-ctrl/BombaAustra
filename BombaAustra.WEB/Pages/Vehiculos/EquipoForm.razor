@@ -4,7 +4,7 @@
 
 <NavigationLock OnBeforeInternalNavigation="OnBeforeInternalNavigation" />
 
-<EditForm EditContext="editContext" OnValidSubmit="OnValidSubmit">
+<EditForm EditContext="editContext" OnValidSubmit="OnValidSubmitHandler">
     <DataAnnotationsValidator />
 
     <div class="mb-3">
@@ -80,5 +80,17 @@
             return;
         }
         context.PreventNavigation();
+    }
+
+    private async Task OnValidSubmitHandler()
+    {
+        // Asigna la fecha actual
+        Equipos.FECHA_INGRESO = DateTime.Now;
+        Equipos.FECHA_ESTIMADO = DateTime.Now.AddYears(3);
+
+        // Realiza otras operaciones necesarias, como guardar en la base de datos
+
+        // Dispara el evento de éxito o realiza la lógica deseada
+        await OnValidSubmit.InvokeAsync();
     }
 }

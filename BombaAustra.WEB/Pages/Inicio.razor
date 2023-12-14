@@ -53,6 +53,7 @@
                             <tr>
                                 <th>Sigla</th>
                                 <th>Mensaje</th>
+                                <th>Fecha de servicio</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -69,6 +70,9 @@
                                         {
                                             <span>Atrasado en revisión técnica</span>
                                         }
+                                    </td>
+                                    <td>
+                                        @vehiculoProximo.ULTIMA_REVISION_TEC.ToString("dd/MM/yyyy")
                                     </td>
                                 </tr>
                             }
