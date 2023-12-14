@@ -11,41 +11,40 @@
     </Authorized>
     <NotAuthorized Context="notAuthorizedContext">
 
-        <div class="all">
-            <div class="bloque">
-                <img class="img" src="/images/aad.png" alt="Logo 1" />
-
-            </div>
-            <div class="col-md-4  offset-md-4 bloque">
+        <div class="all"> <!-- Contenido del cuerpo -->
+            <div class="col-md-4  offset-md-4 bloque"> <!-- columna 2 -->
 
                 <EditForm Model="loginDTO" OnValidSubmit="LoginAsync">
                     <DataAnnotationsValidator />
-                    <h1 class="titulos">Bienvenido a Bomba Austria</h1>
-                    <div class="card bg-light brick">
+                    <div class="cuadro">
+                        <h1 class="titulos">Bienvenido a Bomba Austria</h1> <!-- titulo -->
+                    </div>
+                   
+                    <div class="card bg-light brick"> <!-- contenido del card de inicio seccion -->
                         <div class="card-header justify-content-center">
                             <span>
                                 <i class="oi oi-account-login" /> Iniciar Sesión
                             </span>
                         </div>
                         <div class="card-body">
-                            <div class="mb-3">
+                            <div class="mb-3"> <!-- textbox para ingresar correo -->
                                 <label>Email:</label>
                                 <div>
                                     <InputText class="form-control" @bind-Value="@loginDTO.Email" />
                                     <ValidationMessage For="@(() => loginDTO.Email)" />
                                 </div>
                             </div>
-                            <div class="mb-3">
+                            <div class="mb-3"> <!-- textbox de contradeña -->
                                 <label>Contraseña:</label>
                                 <div>
-                                    <InputText type="password" class="form-control" @bind-Value="@loginDTO.Password" />
+                                    <InputText type="password" class="form-control" @bind-Value="@loginDTO.Password" /> 
                                     <ValidationMessage For="@(() => loginDTO.Password)" />
                                 </div>
                             </div>
                         </div>
                         <div class="card-header justify-content-center">
                             <span>
-                                <button class="btn btn-sm btn-primary" type="submit"><i class="oi oi-check" /> Iniciar Sesión</button>
+                                <button class="btn btn-sm btn-primary" type="submit"><i class="oi oi-check" /> Iniciar Sesión</button> <!-- boton de iniciar seccion -->
                             </span>
                         </div>
                         <div class="card-footer">
@@ -56,6 +55,7 @@
                 </EditForm>
             </div>
         </div>
+
     </NotAuthorized>
 </AuthorizeView>
 

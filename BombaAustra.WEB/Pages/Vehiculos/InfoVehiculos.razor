@@ -2,6 +2,7 @@
 @inject IRepository repository
 @inject NavigationManager navigate
 @inject SweetAlertService swwetAlertService
+@inject NavigationManager Navigation
 @using Microsoft.Extensions.Primitives;
 @using Newtonsoft.Json;
 @using iText.Kernel.Colors;
@@ -97,10 +98,13 @@
 
         </div>
     </div>
+
+<button @onclick="EstadoVehiculos" class="btn btn-success boton">Regresar</button>
 <AuthorizeView Roles="AdministradorGeneral">
     <a class="btn btn-warning" href="/ListVehi/edit/@vehiculo?.SIGLA">Editar</a>
 </AuthorizeView>
 <button class="btn btn-outline-success" @onclick="GeneratePdf">Generar PDF</button>
+
 @if (pdfBytes != null)
 {
     <a href="data:application/pdf;base64,@pdfBase64" download="@vehiculo!.SIGLA" class="btn btn-outline-success"><i class="oi oi-data-transfer-download"/>Descargar PDF</a>
@@ -257,6 +261,11 @@
             // Por ejemplo, mostrar un mensaje de error al usuario
             // y/o loggear el error para su posterior análisis
         }
+    }
+
+    public void EstadoVehiculos()
+    {
+        Navigation.NavigateTo("/ListVehi");
     }
     
 }
